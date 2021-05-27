@@ -165,7 +165,7 @@ class NewAssignmentController extends Controller
             )->first();
         
         $userData = NewAssignmentEmployee::with('user')->where('new_assignment_id',$id)->get();
-
+        dd($userData);
         $pageTitle = self::$pageTitle;
         $pageDescription = self::$pageTitle . ' Detail Data';
         $page_breadcrumbs = [

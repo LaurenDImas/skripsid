@@ -32,6 +32,6 @@ class SendMail extends Mailable
     public function build()
     {
         return $this->markdown('email.new_assignment')
-                    ->subject('Kerja Kerja Kerja');
+                    ->subject('New Assigment');
     }
 }

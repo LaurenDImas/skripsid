@@ -11,6 +11,7 @@ use Illuminate\Support\str;
 use DB;
 use Hash;
 use DataTables;
+use Auth;
 
     
 class UserController extends Controller
@@ -109,11 +110,12 @@ class UserController extends Controller
             'password' => 'required|same:confirm-password',
             'roles' => 'required'
         ]);
-    
+            
         $input = $request->all();
+        $roles = Role::where('name',$input['roles'])->first();
         $input['photo'] = $request->file('photo')->store('assets/user','public');
+        $input['role_id'] = $roles->id;
         $input['password'] = Hash::make($input['password']);
-    
         $user = self::$modelName::create($input);
         $user->assignRole($request->input('roles'));
     
@@ -182,6 +184,8 @@ class UserController extends Controller
         ]);
     
         $input = $request->all();
+        $roles = Role::where('name',$input['roles'])->first();
+        $input['role_id'] = $roles->id;
         if(!empty($input['password'])){ 
             $input['password'] = Hash::make($input['password']);
         }else{

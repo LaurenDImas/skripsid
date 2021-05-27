@@ -135,14 +135,14 @@ class NewAssignmentController extends Controller
                 'new_assignment_id' =>  $upload->id
             ];
     
-            // $user = User::where([['id','=',$r],['role_id','=',4]])->get();
-            // foreach($user as $key => $rr){
-            //     $details = [
-            //         'title' => 'Tes Ngirim Email Skripsi',
-            //         'body' => 'lorem'
-            //     ];
-            //     Mail::to($rr->email)->send(new SendMail($details));
-            // }
+            $user = User::where([['id','=',$r],['role_id','=',4]])->get();
+            foreach($user as $key => $rr){
+                $details = [
+                    'title' => 'Hai '. $rr->name,
+                    'body' => 'Silahkan cek aplikasi anda dengan username '. $rr->email .' selamat mengerjakan!!!'
+                ];
+                Mail::to($rr->email)->send(new SendMail($details));
+            }
             NewAssignmentEmployee::create($saveUser);
         }
         

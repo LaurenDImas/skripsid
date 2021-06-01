@@ -50,7 +50,7 @@ class NewAssignmentController extends Controller
                 'new_assignments.*',
                 DB::raw('(CASE WHEN assignment = "priority" THEN "Priority" ELSE "New Daily Assessment" END) AS assignment')
             )
-            ->orderBy('id','DESC')
+            ->orderBy('date','DESC')
             ->get();
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {

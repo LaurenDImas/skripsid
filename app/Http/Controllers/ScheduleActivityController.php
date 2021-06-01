@@ -53,10 +53,12 @@ class ScheduleActivityController extends Controller
             if(Auth::user()->role_id != 3){
                 $data = $data->where([
                     ['user_id',"=",Auth::user()->id],
-                    ["assignment","=","new"]
                 ]);
             }
-            $data = $data->get();
+            $data = $data->where([
+                ["assignment","=","new"]
+            ]);
+            $data = $data->orderBy('date','DESC')->get();
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {
                     $btn = '
@@ -95,6 +97,8 @@ class ScheduleActivityController extends Controller
      */
     public function create()
     {
+
+
         $project = Project::pluck('name','id')->all();
         $user = User::where('role_id',4)->get();
         $data = ScheduleActivity::all();
@@ -170,16 +174,33 @@ class ScheduleActivityController extends Controller
                 'schedule_activities.*'
             )->where('id',$id)->first();
         
-
+        $items = [
+            "new"=>    "New Daily Assessment",
+            "priority"=> "Priority"
+        ];
+        $assigmentEmployee = $this->assigmentEmployee($data->new_assignment_id,$data->created_by);
+        
         $pageTitle = self::$pageTitle;
-        $pageDescription = self::$pageTitle . ' Detail Data';
+        $pageDescription = $items[$assigmentEmployee->newAssignment->assignment] ." Detail";
         $page_breadcrumbs = [
-            url(self::$folderPath . '/') => "List " . self::$pageTitle,
+            url(self::$folderPath . '/') => "List " . $items[$assigmentEmployee->newAssignment->assignment],
             url(self::$folderPath . '/create') => $pageDescription
         ];
-
-        $permissionName = self::$folderPath;
+        if($items[$assigmentEmployee->newAssignment->assignment] == "Priority"){
+            // dd($assigmentEmployee->id);
+            $permissionName = "priorities/".$assigmentEmployee->id;
+        }else{
+            $permissionName = self::$folderPath.'/'.$assigmentEmployee->id;
+        }
         return view(self::$folderPath . '.show', compact('pageTitle', 'pageDescription', 'page_breadcrumbs', 'permissionName','data'));
+    }
+    
+    public function assigmentEmployee($new_assignment_id,$user_id){
+        
+        $data = NewAssignmentEmployee::with(['newAssignment','newAssignment.application','newAssignment.application.project','user'])
+        ->where([['new_assignment_id',$new_assignment_id],['user_id',$user_id]])->first();
+
+        return $data;
     }
 
     public function deleteGallery(Request $request,$photoid,$id){

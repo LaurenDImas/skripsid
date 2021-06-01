@@ -45,7 +45,7 @@ class PriorityController extends Controller
     {
         if ($request->ajax()) {
             DB::statement(DB::raw('set @rownum=0'));
-            $data = NewAssignmentEmployee::with(['newAssignment','newAssignment.application','newAssignment.application.project'])
+            $data = NewAssignmentEmployee::with(['user','newAssignment','newAssignment.application','newAssignment.application.project'])
             ->join('new_assignments','new_assignments.id','new_assignment_employees.new_assignment_id')
             ->select(
                 DB::raw('@rownum := @rownum +1 as rownum'),
@@ -54,9 +54,13 @@ class PriorityController extends Controller
             if(Auth::user()->role_id != 3){
                 $data = $data->where([
                     ['user_id',"=",Auth::user()->id],
-                    ["assignment","=","priority"]
                 ]);
             }
+            
+            $data = $data->where([
+                ["assignment","=","priority"]
+            ])
+            ->orderBy('date','DESC');
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {
                     $btn = '
@@ -126,7 +130,7 @@ class PriorityController extends Controller
                                     <li class="nav-item"><a class="nav-link"  href="../'.$link.'/show/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
                                     <li class="nav-item"><a class="nav-link btn-delete-record" href="javascript:;" data-url="../'.$link.'/' . $row->id . '"><i class="nav-icon la la-trash "></i><span class="nav-text">Delete</span></a></li>';
                     }else{
-                        $btn =  '<li class="nav-item"><a class="nav-link"  href="../'.$link.'/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>';
+                        $btn =  '<li class="nav-item"><a class="nav-link"  href="../'.$link.'/show/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>';
                     }
                     $btn = '
                             <div class="dropdown dropdown-inline">
@@ -158,12 +162,17 @@ class PriorityController extends Controller
                 url(self::$folderPath . '/create') => $pageDescription
             ];
             $edit = "";
-            $permissionName = self::$folderPath;
+            
+            if($items[$data->newAssignment->assignment] == "Priority"){
+                $permissionName = self::$folderPath;
+            }else{
+                $permissionName = "schedule_activities";
+            }
             return view(self::$folderPath . '.show', compact('edit', 'pageDescription', 'page_breadcrumbs', 'permissionName','data'));
         }
     }
 
-    private function assigmentEmployee($id){
+    public function assigmentEmployee($id){
         
         $data = NewAssignmentEmployee::with(['newAssignment','newAssignment.application','newAssignment.application.project','user'])
         ->where('id',$id)->first();

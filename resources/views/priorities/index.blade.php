@@ -60,6 +60,14 @@
                         orderable:true
                     },
                    
+                    @if(Auth::user()->role_id == 3)
+                        {
+                            title: "Programmer", 
+                            data: 'user.name', 
+                            width:"20%",
+                            name: 'user.name'
+                        },
+                    @endif
                     {
                         title: "Deadline", 
                         data: 'id', 

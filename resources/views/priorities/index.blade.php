@@ -31,6 +31,10 @@
 @section('scripts')
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}" type="text/javascript"></script>
     <script>
+        var items = {
+            "new":    "New Daily Assessment",
+            "priority": "Priority"
+        };
         $(function () {
             var table     = $('.kt_datatable');
             var dataTable = table.DataTable({
@@ -55,16 +59,35 @@
                         searchable:false,
                         orderable:true
                     },
+                   
+                    {
+                        title: "Deadline", 
+                        data: 'id', 
+                        width:"40%",
+                        name: 'id',
+                        render:function(id, e, t, n) {
+                            return t.new_assignment.date +" - "+ t.new_assignment.alarm;
+                        },
+                    },
+                    {
+                        title: "Assignment", 
+                        data: 'new_assignment.assignment', 
+                        width:"20%",
+                        name: 'assignment', 
+                        render:function(assignment) {
+                            return items[assignment];
+                        },
+                    },
                     {
                         title: "Project", 
                         data: 'new_assignment.application.project.name', 
-                        width:"48%",
+                        width:"20%",
                         name: 'new_assignment.application.project.name'
                     },
                     {
                         title: "Application", 
                         data: 'new_assignment.application.name', 
-                        width:"48%",
+                        width:"20%",
                         name: 'new_assignment.application.name'
                     },
                     { 
@@ -74,7 +97,7 @@
                         width:"1%",
                         orderable: false, 
                         searchable: false
-                    },
+                    }
                 ]
             });
         }); 

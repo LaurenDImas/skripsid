@@ -72,15 +72,30 @@
                         orderable:true
                     },
                     {
+                        title: "Deadline", 
+                        data: 'id', 
+                        width:"40%",
+                        name: 'id',
+                        render:function(id, e, t, n) {
+                            return t.date +" - "+ t.alarm;
+                        },
+                    },
+                    {
+                        title: "Assignment", 
+                        data: 'assignment', 
+                        width:"20%",
+                        name: 'assignment'
+                    },
+                    {
                         title: "Project", 
                         data: 'application.project.name', 
-                        width:"48%",
+                        width:"20%",
                         name: 'application.project.name'
                     },
                     {
                         title: "Application", 
                         data: 'application.name', 
-                        width:"48%",
+                        width:"20%",
                         name: 'application.name'
                     },
                     { 

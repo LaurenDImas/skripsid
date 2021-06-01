@@ -47,6 +47,15 @@
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
+                    <label for="exampleSelect1">Assignment
+                        <span class="text-danger">*</span>
+                    </label>    
+                    {!! Form::select('assignment', ["new"=>"New Daily Assignment","priority"=>"Priority"],null, 
+                                    array('class' => 'form-control',"id"=>"assignment","style"=>"width:100%", "required")) !!}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
                     <label>Date
                         <span class="text-danger">*</span>
                     </label>

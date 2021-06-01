@@ -50,7 +50,7 @@
             <tr>
                 <th width="7%">Programmer</th>
                 <th width="1%" class="text-center">:</th>
-                <th width="18%" >{{$userData->user->name}}
+                <th width="18%" >{{$data->user->name}}
                 </th>
                 <th width="7%">File</th>
                 <th width="1%" class="text-center">:</th>
@@ -141,20 +141,21 @@
                                             <label for="exampleSelect1">Kendala</label> 
                                         </div>
                                         <div class="col-md-10">
-                                            <input type="text" name="constraint" placeholder="Ada/Tidak" class="form-control">
+                                            {!! Form::select('constraint', [0=>"Ya",1=>"Tidak"],1, 
+                                                    array('class' => 'form-control',"id"=>"constraint","style"=>"width:100%", "required")) !!}
                                         </div>
-                                    </div>
+                                    </div> 
                                 </div>
                             </div>
 
                             
                             <div class="col-12">
                                 <div class="form-group">
-                                    <div class="row">
-                                    <div class="col-md-2 d-flex align-items-center">
-                                        <label for="exampleSelect1">Aktivitas</label> 
-                                    </div>
-                                    <div class="col-md-10">
+                                        <div class="row">
+                                        <div class="col-md-2 d-flex align-items-center">
+                                            <label for="exampleSelect1">Aktivitas</label> 
+                                        </div>
+                                        <div class="col-md-10">
                                             <textarea name="activity" id="activity"></textarea>
                                         </div>
                                     </div>

@@ -47,8 +47,11 @@ class NewAssignmentController extends Controller
             DB::statement(DB::raw('set @rownum=0'));
             $data = self::$modelName::with(['application','application.project'])->select(
                 DB::raw('@rownum := @rownum +1 as rownum'),
-                'new_assignments.*'
-            )->get();
+                'new_assignments.*',
+                DB::raw('(CASE WHEN assignment = "priority" THEN "Priority" ELSE "New Daily Assessment" END) AS assignment')
+            )
+            ->orderBy('id','DESC')
+            ->get();
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {
                     $btn = '
@@ -123,9 +126,10 @@ class NewAssignmentController extends Controller
         }  
         $upload = new NewAssignment;
         $upload->date =date('Y-m-d', strtotime(str_replace('/', '-', $request->date)));
+        $upload->assignment = $request->assignment;
         $upload->project_id = $request->project_id;
         $upload->application_id = $request->application_id;
-        $upload->alarm = date("h:i:s", strtotime( $request->alarm ));
+        $upload->alarm = date("G:i:s", strtotime( $request->alarm ));
         $upload->file = json_encode($data);
         $upload->save();
         // dd($request->user_id);
@@ -135,14 +139,14 @@ class NewAssignmentController extends Controller
                 'new_assignment_id' =>  $upload->id
             ];
     
-            $user = User::where([['id','=',$r],['role_id','=',4]])->get();
-            foreach($user as $key => $rr){
-                $details = [
-                    'title' => 'Hai '. $rr->name,
-                    'body' => 'Silahkan cek aplikasi anda dengan username '. $rr->email .' selamat mengerjakan!!!'
-                ];
-                Mail::to($rr->email)->send(new SendMail($details));
-            }
+            // $user = User::where([['id','=',$r],['role_id','=',4]])->get();
+            // foreach($user as $key => $rr){
+            //     $details = [
+            //         'title' => 'Hai '. $rr->name,
+            //         'body' => 'Silahkan cek aplikasi anda dengan username '. $rr->email .' selamat mengerjakan!!!'
+            //     ];
+            //     Mail::to($rr->email)->send(new SendMail($details));
+            // }
             NewAssignmentEmployee::create($saveUser);
         }
         
@@ -165,7 +169,6 @@ class NewAssignmentController extends Controller
             )->first();
         
         $userData = NewAssignmentEmployee::with('user')->where('new_assignment_id',$id)->get();
-        dd($userData);
         $pageTitle = self::$pageTitle;
         $pageDescription = self::$pageTitle . ' Detail Data';
         $page_breadcrumbs = [
@@ -249,8 +252,9 @@ class NewAssignmentController extends Controller
         }
         $input['date'] =date('Y-m-d', strtotime(str_replace('/', '-', $request->date)));
         $input['project_id'] = $request->project_id;
+        $input['assignment'] = $request->assignment;
         $input['application_id'] = $request->application_id;
-        $input['alarm'] = date("h:i:s", strtotime( $request->alarm ));;
+        $input['alarm'] = date("G:i:s", strtotime( $request->alarm ));;
         $input['file'] = json_encode($output);  
         $update = self::$modelName::findOrFail($id);
         $update->update($input);

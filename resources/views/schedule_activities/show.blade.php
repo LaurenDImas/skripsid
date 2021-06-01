@@ -61,7 +61,7 @@
                 <th width="18%" >{{ $data->application->name }}</th>
                 <th width="7%">Kendala</th>
                 <th width="1%" class="text-center">:</th>
-                <th width="18%" >{{ $data->constraint }}</th>
+                <th width="18%" >{{ $data->constraint == 0 ? "Ya" : "Tidak" }}</th>
             </tr>
             <tr>
                 <th width="7%">Aktivitas</th>

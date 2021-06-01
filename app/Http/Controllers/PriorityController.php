@@ -46,12 +46,16 @@ class PriorityController extends Controller
         if ($request->ajax()) {
             DB::statement(DB::raw('set @rownum=0'));
             $data = NewAssignmentEmployee::with(['newAssignment','newAssignment.application','newAssignment.application.project'])
+            ->join('new_assignments','new_assignments.id','new_assignment_employees.new_assignment_id')
             ->select(
                 DB::raw('@rownum := @rownum +1 as rownum'),
                 'new_assignment_employees.*'
-            )->get();
+            );
             if(Auth::user()->role_id != 3){
-                $data = $data->where('user_id',Auth::user()->id);
+                $data = $data->where([
+                    ['user_id',"=",Auth::user()->id],
+                    ["assignment","=","priority"]
+                ]);
             }
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {
@@ -82,76 +86,6 @@ class PriorityController extends Controller
         }
     }
     
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $project = Project::pluck('name','id')->all();
-        $user = User::where('role_id',4)->get();
-        $data = NewAssignment::all();
-        $pageTitle = self::$pageTitle;
-        $pageDescription = self::$pageTitle . ' Add Data';
-        $page_breadcrumbs = [
-            url(self::$folderPath . '/') => "List " . self::$pageTitle,
-            url(self::$folderPath . '/create') => $pageDescription
-        ];
-
-        $permissionName = self::$folderPath;
-        return view(self::$folderPath . '.create', compact('pageTitle', 'pageDescription', 'page_breadcrumbs', 'permissionName', 'project','data','user'));
-
-    }
-    
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {   
-        
-        if($request->hasFile('file')){
-            foreach($request->file('file') as $image){
-                
-                $fileName   = rand(0,100000) . '.' . $image->getClientOriginalName();
-                $name = $image->storeAs('assets/NewAss', $fileName,'public');
-                $data[] = $name;
-            }
-        }else{
-            $data[] = "";
-        }  
-        $upload = new NewAssignment;
-        $upload->date =date('Y-m-d', strtotime(str_replace('/', '-', $request->date)));
-        $upload->project_id = $request->project_id;
-        $upload->application_id = $request->application_id;
-        $upload->alarm = date("h:i:s", strtotime( $request->alarm ));
-        $upload->file = json_encode($data);
-        $upload->save();
-        // dd($request->user_id);
-        foreach($request->user_id as $key => $r){            
-            $saveUser = [
-                'user_id'           =>  $r,
-                'new_assignment_id' =>  $upload->id
-            ];
-    
-            $user = User::where([['id','=',$r],['role_id','=',4]])->get();
-            foreach($user as $key => $rr){
-                $details = [
-                    'title' => 'Tes Ngirim Email Skripsi',
-                    'body' => 'lorem'
-                ];
-                Mail::to($rr->email)->send(new SendMail($details));
-            }
-            NewAssignmentEmployee::create($saveUser);
-        }
-        
-        return redirect()->route('new_assignments.index')
-                        ->with('success','New_assignment created successfully');
-    }
-
     
     /**
      * Display the specified resource.
@@ -164,24 +98,35 @@ class PriorityController extends Controller
 
         if ($request->ajax()) {
             $str = str_replace('show','',$id);
+            
             DB::statement(DB::raw('set @rownum=0'));
             $data1 = ScheduleActivity::with(['application','application.project','user'])->select(
                 DB::raw('@rownum := @rownum +1 as rownum'),
-                'schedule_activities.*'
-            )
-            ->where([
-                ['created_by',Auth::user()->id],
-                ['new_assignment_id', $str]
-            ])
-            ->get();
+                'schedule_activities.*',
+                'new_assignments.assignment'
+            )->join('new_assignments','new_assignments.id','schedule_activities.new_assignment_id');
+            if(Auth::user()->role_id != 3){
+                $data1 = $data1->where([
+                    ['schedule_activities.created_by',Auth::user()->id]
+                ]);
+            }
+            $data1 = $data1->where([
+                ['schedule_activities.new_assignment_id', $str]
+            ]);
+            $data1 = $data1->get();
             return Datatables::of($data1)
                 ->addColumn('action', function ($row) {
-                    if(Auth::user()->role_id == 4){
-                        $btn =  '<li class="nav-item"><a class="nav-link"  href="../schedule_activities/' . $row->id . '/edit"><i class="nav-icon la la-edit"></i><span class="nav-text">Edit Details</span></a></li>
-                                    <li class="nav-item"><a class="nav-link" target="_BLANK" href="../schedule_activities/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
-                                    <li class="nav-item"><a class="nav-link btn-delete-record" href="javascript:;" data-url="../schedule_activities/' . $row->id . '"><i class="nav-icon la la-trash "></i><span class="nav-text">Delete</span></a></li>';
+                    if($row->assignment == "new"){
+                        $link = "schedule_activities";
                     }else{
-                        $btn =  '<li class="nav-item"><a class="nav-link" target="_BLANK" href="../schedule_activities/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>';
+                        $link = "priorities";
+                    }
+                    if(Auth::user()->role_id == 4){
+                        $btn =  '<li class="nav-item"><a class="nav-link"  href="../'.$link.'/' . $row->id . '/edit"><i class="nav-icon la la-edit"></i><span class="nav-text">Edit</span></a></li>
+                                    <li class="nav-item"><a class="nav-link"  href="../'.$link.'/show/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
+                                    <li class="nav-item"><a class="nav-link btn-delete-record" href="javascript:;" data-url="../'.$link.'/' . $row->id . '"><i class="nav-icon la la-trash "></i><span class="nav-text">Delete</span></a></li>';
+                    }else{
+                        $btn =  '<li class="nav-item"><a class="nav-link"  href="../'.$link.'/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>';
                     }
                     $btn = '
                             <div class="dropdown dropdown-inline">
@@ -200,30 +145,28 @@ class PriorityController extends Controller
                 })
                 ->make(true);
         }else{
+            
+            $items = [
+                "new"=>    "New Daily Assessment",
+                "priority"=> "Priority"
+            ];
             $data = $this->assigmentEmployee($id);
-            // dd($data);
-            $userData = NewAssignmentEmployee::with('user')->where('id',$id)->first();
             
-            
-            $pageTitle = self::$pageTitle;
-            $pageDescription = self::$pageTitle . ' Detail Data';
+            $pageDescription = $items[$data->newAssignment->assignment];
             $page_breadcrumbs = [
-                url(self::$folderPath . '/') => "List " . self::$pageTitle,
+                url(self::$folderPath . '/') => "List " . $items[$data->newAssignment->assignment],
                 url(self::$folderPath . '/create') => $pageDescription
             ];
             $edit = "";
             $permissionName = self::$folderPath;
-            return view(self::$folderPath . '.show', compact('pageTitle','edit', 'pageDescription', 'page_breadcrumbs', 'permissionName','data','userData'));
+            return view(self::$folderPath . '.show', compact('edit', 'pageDescription', 'page_breadcrumbs', 'permissionName','data'));
         }
     }
 
     private function assigmentEmployee($id){
         
-        $data = NewAssignmentEmployee::with(['newAssignment','newAssignment.application','newAssignment.application.project'])
-        ->select(
-            DB::raw('@rownum := @rownum +1 as rownum'),
-            'new_assignment_employees.*'
-        )->where('id',$id)->first();
+        $data = NewAssignmentEmployee::with(['newAssignment','newAssignment.application','newAssignment.application.project','user'])
+        ->where('id',$id)->first();
 
         return $data;
     }

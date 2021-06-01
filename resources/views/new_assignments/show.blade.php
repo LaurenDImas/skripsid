@@ -49,7 +49,7 @@
                 <th width="7%">Project</th>
                 <th width="1%" class="text-center">:</th>
                 <th width="18%" >{{ date("d-m-Y", strtotime($data->date)) }}</th>
-                <th width="7%">Project</th>
+                <th width="7%">Aplikasi</th>
                 <th width="1%" class="text-center">:</th>
                 <th width="18%" >{{ $data->application->project->name }}</th>
             </tr>

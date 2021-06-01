@@ -9,6 +9,7 @@ use App\ScheduleActivity;
 use App\Application;
 use App\User;
 use App\NewAssignmentEmployee;
+use App\NewAssignment;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\str;
@@ -43,20 +44,21 @@ class ScheduleActivityController extends Controller
     {
         if ($request->ajax()) {
             DB::statement(DB::raw('set @rownum=0'));
-            $data = self::$modelName::with(['application','application.project','user'])->select(
+            $data = NewAssignmentEmployee::with(['user','newAssignment','newAssignment.application','newAssignment.application.project'])
+            ->join('new_assignments','new_assignments.id','new_assignment_employees.new_assignment_id')
+            ->select(
                 DB::raw('@rownum := @rownum +1 as rownum'),
-                'schedule_activities.*'
-            )->get();
+                'new_assignment_employees.*'
+            );
+            if(Auth::user()->role_id != 3){
+                $data = $data->where([
+                    ['user_id',"=",Auth::user()->id],
+                    ["assignment","=","new"]
+                ]);
+            }
+            $data = $data->get();
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {
-                    if(Auth::user()->role_id == 4){
-                        $btn =  '<li class="nav-item"><a class="nav-link" href="'.self::$folderPath.'/' . $row->id . '/edit"><i class="nav-icon la la-edit"></i><span class="nav-text">Edit Details</span></a></li>
-                                    <li class="nav-item"><a class="nav-link" href="'.self::$folderPath.'/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
-                                    <li class="nav-item"><a class="nav-link btn-delete-record" href="javascript:;" data-url="' . self::$folderPath . '/' . $row->id . '"><i class="nav-icon la la-trash "></i><span class="nav-text">Delete</span></a></li>';
-                    }else{
-                        $btn =  '<li class="nav-item"><a class="nav-link" href="'.self::$folderPath.'/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>';
-
-                    }
                     $btn = '
                             <div class="dropdown dropdown-inline">
                                 <a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">
@@ -64,7 +66,7 @@ class ScheduleActivityController extends Controller
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
                                 <ul class="nav nav-hoverable flex-column">
-                                   '. $btn.'
+                                    <li class="nav-item"><a class="nav-link" href="'.self::$folderPath.'/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
                                 </ul>
                                 </div>
                             </div>
@@ -142,8 +144,8 @@ class ScheduleActivityController extends Controller
             $upload->new_assignment_id           = $request->new_assignment_id;
         }
         $upload->status           = ($request->status == null) ? 0 : $request->status;
-        $upload->hour_start     = date("h:i:s", strtotime( $request->hour_start ));
-        $upload->hour_end       = date("h:i:s", strtotime( $request->hour_end ));
+        $upload->hour_start     = date("G:i:s", strtotime( $request->hour_start ));
+        $upload->hour_end       = date("G:i:s", strtotime( $request->hour_end ));
         $upload->file           = json_encode($data);
         $upload->save();
         
@@ -165,9 +167,8 @@ class ScheduleActivityController extends Controller
     public function show($id)
     {
         $data = self::$modelName::with(['application','application.project'])->select(
-                DB::raw('@rownum := @rownum +1 as rownum'),
                 'schedule_activities.*'
-            )->first();
+            )->where('id',$id)->first();
         
 
         $pageTitle = self::$pageTitle;
@@ -234,10 +235,6 @@ class ScheduleActivityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = $request->validate([
-            'project_id' => 'required',
-            'application_id' => 'required',
-        ]);
         $input = $request->all();
         if($request->hasFile('file')){
             foreach($request->file('file') as $image){
@@ -254,26 +251,27 @@ class ScheduleActivityController extends Controller
         }
         $upload                 = self::$modelName::findOrFail($id);
         $upload->date           =date('Y-m-d', strtotime(str_replace('/', '-', $request->date)));
-        $upload->project_id     = $request->project_id;
-        $upload->application_id = $request->application_id;
-        $upload->activity      = $request->activity;
+        $upload->project_id     = $upload->project_id;
+        $upload->application_id = $upload->application_id;
+        $upload->activity       = $request->activity;
         $upload->constraint     = $request->constraint;
         $upload->note           = $request->note;
-        $upload->hour_start     = date("h:i:s", strtotime( $request->hour_start ));
-        $upload->hour_end       = date("h:i:s", strtotime( $request->hour_end ));
+        $upload->hour_start     = date("G:i:s", strtotime( $request->hour_start ));
+        $upload->hour_end       = date("G:i:s", strtotime( $request->hour_end ));
         $upload->file           = json_encode($output);
         $upload->status           = 1;
         $upload->save();
-        if(!empty($upload->new_assignment_id)){
-            // dd($upload->new_assignment_id);
-            $data1 = NewAssignmentEmployee::select('id')->where([
-                ['user_id',Auth::user()->id],
-                ['new_assignment_id', $upload->new_assignment_id]
+        
+        $check = NewAssignment::findOrFail($upload->new_assignment_id);
+        $getId = NewAssignmentEmployee::select('id')->where([
+            ['user_id',Auth::user()->id],
+            ['new_assignment_id', $upload->new_assignment_id]
             ])->first();
-            return redirect()->to('priorities/'.$data1->id)
-                        ->with('success','Schedule Activity updated successfully');
+        if($check->assignment == "priority"){
+            return redirect()->to('priorities/'.$getId->id)
+            ->with('success','Priority updated successfully');
         }else{
-            return redirect()->route(self::$folderPath.'.index')
+            return redirect()->to('schedule_activities/'.$getId->id)
                         ->with('success','Schedule Activity updated successfully');
         }
        

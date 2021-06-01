@@ -41,7 +41,7 @@
         </div>
 
         <!--begin::Form-->
-        {!! Form::model($data, ['method' => 'PATCH','files' => true, 'route' => [$permissionName . '.update', $data->id]]) !!}
+        {!! Form::model($data, ['method' => 'put','files' => true, 'route' => [$permissionName . '.update', $data->id]]) !!}
             <div class="card-body">
                 <div class="row">
                     <div class="col-12">
@@ -67,37 +67,12 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-2 d-flex align-items-center">
-                                    <label for="exampleSelect1">Project</label> 
-                                </div>
-                                <div class="col-md-10">
-                                    {!! Form::select('project_id', 
-                                                    $project,null, 
-                                                    array('class' => 'form-control project_id',"id"=>"project_id","style"=>"width:100%", 'required')) !!}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-2 d-flex align-items-center">
-                                    <label for="exampleSelect1">Application</label> 
-                                </div>
-                                <div class="col-md-10">
-                                    {!! Form::select('application_id',  $application,null, 
-                                                    array('class' => 'form-control',"id"=>"application_id","style"=>"width:100%", "required")) !!}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-2 d-flex align-items-center">
                                     <label for="exampleSelect1">Kendala</label> 
                                 </div>
                                 <div class="col-md-10">
-                                    <input type="text" name="constraint" placeholder="Ada/Tidak" class="form-control" value="{{ $data->constraint }}">
+                                   
+                                    {!! Form::select('constraint', [0=>"Ya",1=>"Tidak"],null, 
+                                            array('class' => 'form-control',"id"=>"constraint","style"=>"width:100%", "required")) !!}
                                 </div>
                             </div>
                         </div>
@@ -177,7 +152,7 @@
                                     {{basename($picture)}}
                                     <i class="flaticon-download"></i></a>
                                 
-                                    <a href="{{ route('schedule_activities-delete', [basename($picture), $data->id]) }}" class="delete" onclick="return confirm('Are you sure you want to delete this item?');">
+                                    <a href="{{ route('schedule-activity-delete', [basename($picture), $data->id]) }}" class="delete" onclick="return confirm('Are you sure you want to delete this item?');">
                                     <i class="flaticon-delete"></i></a>
                                     <input type="hidden" name="file_hidden[]" value="{{$picture}}">
                                 <br>

@@ -20,6 +20,7 @@ use DB;
 use Hash;
 use DataTables;
 use Pusher\Pusher;
+use App\Jobs\SendEmailNewAssignment;
 
     
 class NewAssignmentController extends Controller
@@ -132,21 +133,23 @@ class NewAssignmentController extends Controller
         $upload->alarm = date("G:i:s", strtotime( $request->alarm ));
         $upload->file = json_encode($data);
         $upload->save();
-        // dd($request->user_id);
+       
+
         foreach($request->user_id as $key => $r){            
             $saveUser = [
                 'user_id'           =>  $r,
                 'new_assignment_id' =>  $upload->id
             ];
-    
-            // $user = User::where([['id','=',$r],['role_id','=',4]])->get();
-            // foreach($user as $key => $rr){
-            //     $details = [
-            //         'title' => 'Hai '. $rr->name,
-            //         'body' => 'Silahkan cek aplikasi anda dengan username '. $rr->email .' selamat mengerjakan!!!'
-            //     ];
-            //     Mail::to($rr->email)->send(new SendMail($details));
-            // }
+            
+            $user = User::where([['id','=',$r],['role_id','=',4]])->get();
+            foreach($user as $key => $rr){
+                $details = [
+                    'email' => $rr->email,
+                    'title' => 'Hai '. $rr->name,
+                    'body' => 'Silahkan cek aplikasi anda dengan username '. $rr->email .' selamat mengerjakan!!!'
+                ];
+                dispatch(new SendEmailNewAssignment($details));
+            }
             NewAssignmentEmployee::create($saveUser);
         }
         

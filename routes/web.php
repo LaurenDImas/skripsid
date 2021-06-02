@@ -22,6 +22,7 @@ Auth::routes();
 Route::post('/login', 'Auth\LoginController@check_login')->name('login.check_login');
 Route::get('/postforgot', 'Auth\ForgotPasswordController@postforgot')->name('postforgot');
 Route::group(['middleware' => ['auth']], function() {
+
     Route::get('/', 'HomeController@index')->name('dashboards');
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');

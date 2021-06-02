@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Observers\BlameableObserver;
-use App\Blameable;
 
 class NewAssignment extends Model
 {

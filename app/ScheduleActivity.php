@@ -3,10 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Blameable;
+
 
 class ScheduleActivity extends Model
 {
-    use Blameable;
+    // use Blameable;
     // test
     protected $guarded = [
         'id',

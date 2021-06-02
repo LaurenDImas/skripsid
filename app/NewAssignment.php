@@ -4,10 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Observers\BlameableObserver;
+use App\Blameable;
 
 class NewAssignment extends Model
 {
-    use Blameable;
+    // use Blameable;
     // test
     protected $fillable = [
     'date', 'project_id', 'application_id','file','alarm'

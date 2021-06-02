@@ -148,7 +148,7 @@ class NewAssignmentController extends Controller
                     'title' => 'Hai '. $rr->name,
                     'body' => 'Silahkan cek aplikasi anda dengan username '. $rr->email .' selamat mengerjakan!!!'
                 ];
-                dispatch(new SendEmailNewAssignment($details));
+                dispatch(new SendEmailNewAssignment($details))->onQueue('assignment');
             }
             NewAssignmentEmployee::create($saveUser);
         }

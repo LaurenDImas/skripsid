@@ -8,7 +8,7 @@ use App\Blameable;
 
 class NewAssignmentEmployee extends Model
 {
-    // use Blameable;
+    use Blameable;
     protected $fillable = [
         'new_assignment_id', 'user_id'
     ];

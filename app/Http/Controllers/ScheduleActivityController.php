@@ -307,7 +307,7 @@ class ScheduleActivityController extends Controller
     public function destroy($id)
     {
         try {
-            $data = self::$modelName::findOrFail($id);
+            $data = ScheduleActivity::findOrFail($id);
             $photo = json_decode($data->file);
             foreach($photo as $key => $value) {
                 Storage::delete('public/assets/NewAss/'.basename($value));

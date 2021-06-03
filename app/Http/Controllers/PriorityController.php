@@ -128,7 +128,7 @@ class PriorityController extends Controller
                     if(Auth::user()->role_id == 4){
                         $btn =  '<li class="nav-item"><a class="nav-link"  href="../'.$link.'/' . $row->id . '/edit"><i class="nav-icon la la-edit"></i><span class="nav-text">Edit</span></a></li>
                                     <li class="nav-item"><a class="nav-link"  href="../'.$link.'/show/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
-                                    <li class="nav-item"><a class="nav-link btn-delete-record" href="javascript:;" data-url="../'.$link.'/' . $row->id . '"><i class="nav-icon la la-trash "></i><span class="nav-text">Delete</span></a></li>';
+                                    <li class="nav-item"><a class="nav-link btn-delete-record" href="javascript:;" data-url="../schedule_activities/delete/' . $row->id . '"><i class="nav-icon la la-trash "></i><span class="nav-text">Delete</span></a></li>';
                     }else{
                         $btn =  '<li class="nav-item"><a class="nav-link"  href="../'.$link.'/show/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>';
                     }

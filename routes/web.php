@@ -35,14 +35,13 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('schedule_activities/create', 'ScheduleActivityController@create')->name("schedule_activities.create");
     Route::post('schedule_activities/store', 'ScheduleActivityController@store')->name("schedule_activities.store");
     Route::put('schedule_activities/update/{id}', 'ScheduleActivityController@update')->name("schedule_activities.update");
-    Route::post('schedule_activities/delete/{id}', 'ScheduleActivityController@delete')->name("schedule_activities.delete");
+    Route::delete('schedule_activities/delete/{id}', 'ScheduleActivityController@destroy')->name("schedule_activities.delete");
     Route::get('schedule_activities/{id}/edit', 'ScheduleActivityController@edit')->name("schedule_activities.edit");
     Route::get('schedule_activities/{id}','PriorityController@show')->name("schedule_activities");
     Route::get('schedule_activities/show/{id}','ScheduleActivityController@show')->name("schedule_activities.show");
 
     Route::get('priorities/{id}/edit', 'ScheduleActivityController@edit')->name("schedule_activities.edit");
-    Route::get('priorities/show/{id}', 'ScheduleActivityController@show')
-    ;
+    Route::get('priorities/show/{id}', 'ScheduleActivityController@show');
 
     Route::get('schedule-activity/delete/{photo_id}/{id}', 'ScheduleActivityController@deleteGallery')->name('schedule-activity-delete');
     Route::resource('priorities','PriorityController');

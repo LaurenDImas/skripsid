@@ -145,7 +145,7 @@ class ProjectController extends Controller
         ];
 
         $permissionName = self::$folderPath;
-        return view(self::$folderPath . '.edit', compact('pageTitle', 'pageDescription', 'page_breadcrumbs', 'permissionName','data','projectRole','roles'));
+        return view(self::$folderPath . '.edit', compact('pageTitle', 'pageDescription', 'page_breadcrumbs', 'permissionName','data'));
     }
     
     /**

@@ -25,8 +25,7 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected function schedule(Schedule $schedule)
-    {
-        
+    {   
         $description = Alarm::first();
         $schedule->command('alarm:day')
             ->dailyAt(date("G:i", strtotime( $description->alarm )));

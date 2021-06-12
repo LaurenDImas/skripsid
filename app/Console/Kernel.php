@@ -27,8 +27,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {   
         $description = Alarm::first();
+        // dd(date("G:i", strtotime( $description->alarm )));
         $schedule->command('alarm:day')
-            ->dailyAt(date("G:i", strtotime( $description->alarm )));
+            ->dailyAt("5:46");
     }
 
     /**

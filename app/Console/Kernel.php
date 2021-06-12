@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\AlarmJob::class,
-        ///
+        //
     ];
 
     /**
@@ -25,9 +25,10 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected function schedule(Schedule $schedule)
-    {
+    {   
+        $description = Alarm::first();
         $schedule->command('alarm:day')
-            ->everyMinute();
+            ->dailyAt(date("G:i", strtotime( $description->alarm )));
     }
 
     /**

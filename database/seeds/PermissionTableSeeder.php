@@ -15,8 +15,11 @@ class PermissionTableSeeder extends Seeder
     public function run()
     {
        $permissions = [
-           'priority-list',
-           'priority-show'
+           'alarm-list',
+           'alarm-create',
+           'alarm-edit',
+           'alarm-delete',
+           'alarm-show'
         ];
    
         foreach ($permissions as $permission) {

@@ -175,7 +175,7 @@ class ScheduleActivityController extends Controller
             )->where('id',$id)->first();
         
         $items = [
-            "new"=>    "New Daily Assessment",
+            "new"=>    "New Daily Assignment",
             "priority"=> "Priority"
         ];
         $assigmentEmployee = $this->assigmentEmployee($data->new_assignment_id,$data->created_by);

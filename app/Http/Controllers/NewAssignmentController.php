@@ -49,7 +49,7 @@ class NewAssignmentController extends Controller
             $data = self::$modelName::with(['application','application.project'])->select(
                 DB::raw('@rownum := @rownum +1 as rownum'),
                 'new_assignments.*',
-                DB::raw('(CASE WHEN assignment = "priority" THEN "Priority" ELSE "New Daily Assessment" END) AS assignment')
+                'assignment'
             )
             ->orderBy('date','DESC')
             ->get();
@@ -130,7 +130,7 @@ class NewAssignmentController extends Controller
         $upload->assignment = $request->assignment;
         $upload->project_id = $request->project_id;
         $upload->application_id = $request->application_id;
-        $upload->alarm = date("G:i:s", strtotime( $request->alarm ));
+        $upload->status = 0;
         $upload->file = json_encode($data);
         $upload->save();
        
@@ -257,10 +257,12 @@ class NewAssignmentController extends Controller
         $input['project_id'] = $request->project_id;
         $input['assignment'] = $request->assignment;
         $input['application_id'] = $request->application_id;
-        $input['alarm'] = date("G:i:s", strtotime( $request->alarm ));;
+        $input['application_id'] = $request->application_id;
         $input['file'] = json_encode($output);  
         $update = self::$modelName::findOrFail($id);
         $update->update($input);
+        // dump($input['assignment']);
+        // dd($update);
         
         // dd($request->user_id);
         $dataIN=[];

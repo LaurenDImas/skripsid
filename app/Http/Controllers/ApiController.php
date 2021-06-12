@@ -5,6 +5,7 @@ use App\Application;
 use Illuminate\Http\Request;
 use App\ScheduleActivity;
 use App\NewAssignmentEmployee;
+use App\NewAssignment;
 
 class ApiController extends Controller
 {
@@ -27,16 +28,27 @@ class ApiController extends Controller
     public function statusAss(Request $request){
         $input = $request->all();
         $input['status'] = $input['status'];
+        
         $status = ScheduleActivity::find($input['id']);
-        if(!empty($input['new_assignment_id'])){
-            $save = [];
-            $save["status"] = $request["status"];
-            $status_ass = NewAssignmentEmployee::where([['new_assignment_id','=',$input['new_assignment_id']],['user_id','=',$input['user_id']]]);
-            $status_ass->update($save);
-        }
-        // dd($status);
         $status->update($input); 
        
+        return response()->json([
+            'data' => $status,
+        ]);
+    }
+    
+    public function statusAssignment(Request $request){
+        $input = $request->all();
+        if($input['type'] == 0){
+            $input['assignment'] = $input['status'];
+            unset($input['status']);
+        }else{
+            $input['status'] = $input['status'];
+        }
+        // dd($input);
+        $status = NewAssignment::find($input['id']);
+        // dd($status);
+        $status->update($input); 
         return response()->json([
             'data' => $status,
         ]);

@@ -74,17 +74,25 @@
                     {
                         title: "Deadline", 
                         data: 'id', 
-                        width:"40%",
+                        width:"20%",
                         name: 'id',
                         render:function(id, e, t, n) {
-                            return t.date +" - "+ t.alarm;
+                            return t.date ;
                         },
                     },
                     {
                         title: "Assignment", 
                         data: 'assignment', 
-                        width:"20%",
-                        name: 'assignment'
+                        width:"20%", 
+                        name: 'assignment',  
+                        render:function(assignment, e, t, n) {
+                            var data = '<div class="form-group data-status" data-id='+t.id+' data-type=0>'
+                                            +'<select class="status form-control assignment" style="width:100%" required="" name="status">'
+                                            +selectedAssignment(t.assignment)
+                                            +'</select>'
+                                        +'</div>';
+                            return data;
+                        }
                     },
                     {
                         title: "Project", 
@@ -98,6 +106,20 @@
                         width:"20%",
                         name: 'application.name'
                     },
+                    {
+                        title: "Status Pekerjaan", 
+                        data: 'status', 
+                        width:"20%",
+                        name: 'status',
+                        render:function(status, e, t, n) {
+                            var data = '<div class="form-group data-status" data-id='+t.id+' data-type=1>'
+                                            +'<select class="status form-control" style="width:100%" required="" name="status">'
+                                            +selected(t.status)
+                                            +'</select>'
+                                        +'</div>';
+                            return data;
+                        }
+                    },
                     { 
                         title: "Actions", 
                         data: 'action', 
@@ -109,5 +131,66 @@
                 ]
             });
         }); 
+
+        function selected(status){
+            var html = "";
+            if(status == 0){
+                html ='<option value="0" selected>Hold</option>'
+                        +'<option value="1">On Progress</option>'
+                        +'<option value="2">Completed</option>';
+            }else if(status == 1){
+                html ='<option value="0">Hold</option>'
+                        +'<option value="1" selected>On Progress</option>'
+                        +'<option value="2">Completed</option>';
+            }else if(status == 2){
+                html ='<option value="0">Hold</option>'
+                        +'<option value="1">On Progress</option>'
+                        +'<option value="2" selected>Completed</option>';
+            }
+            return html;
+            
+        }
+        function selectedAssignment(status){
+            var html = "";
+            // alert(status);
+            if(status == "new"){
+                html ='<option value="new" selected>New Daily Assignment</option>'
+                        +'<option value="priority">Priority</option>';
+            }else if(status == "priority"){
+                html ='<option value="new">New Daily Assignment</option>'
+                        +'<option value="priority" selected>Priority</option>';
+            }
+            return html;    
+        }
+
+        
+        $('body').on('change','.status',function (e) {
+            e.preventDefault();
+            var status = $(this).val(),
+                id = $(this).closest('.data-status').data("id"),
+                type = $(this).closest('.data-status').data("type");
+                // console.log(id);
+                // console.log(status);
+            $.ajax({
+                url : '{{ url('api/status_assignment') }}',
+                type: 'POST',
+                dataType: "JSON",
+                data: {
+                    "id" : id,
+                    "status" : status,
+                    "type" : type
+                },
+                beforeSend: function (xhr) {
+                },
+                success: function(res){
+                    var data = res.data;
+                },
+                error: function(e){
+                    swal.fire('Oops','Terjadi kesalahan','error');  
+                }
+            })
+        });
+        
+       
     </script>
 @endsection

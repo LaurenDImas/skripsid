@@ -10,8 +10,8 @@ class NewAssignment extends Model
 {
     use Blameable;
     // test
-    protected $fillable = [
-    'date', 'project_id', 'application_id','file','alarm'
+    protected $guarded = [
+        'id',
     ];
     
     public function application()

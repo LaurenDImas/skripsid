@@ -151,7 +151,7 @@ class PriorityController extends Controller
         }else{
             
             $items = [
-                "new"=>    "New Daily Assessment",
+                "new"=>    "New Daily Assignment",
                 "priority"=> "Priority"
             ];
             $data = $this->assigmentEmployee($id);

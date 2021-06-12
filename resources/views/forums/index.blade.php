@@ -131,9 +131,18 @@
                 contentType: false,
                 headers : {'X-CSRF-TOKEN':token},
                 beforeSend:function(){
+                    Swal.fire({
+                        type: 'info',
+                        title: 'Harap Menunggu',
+                        text: 'Forum sedang dibuat',
+                        // timer: 3000,
+                        showCancelButton: false,
+                        showConfirmButton: false
+                    })
                 },
                 success:function(data)
                 {
+                    swal.close()
                     load();
                     $('#forumModal').modal('toggle');
                     $('#komentar').val('');

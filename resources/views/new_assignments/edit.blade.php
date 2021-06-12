@@ -105,19 +105,6 @@
                     </select>
                 </div>
             </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label>Alarm Pengingat</label>
-                    <div class="input-group date">
-                        <input type="time" class="form-control" name="alarm" id="kt_timepicker_3" value="{{ date("h:i:s", strtotime($data->alarm)) }}" />
-                        <div class="input-group-append">
-                            <span class="input-group-text">
-                                <i class="la la-calendar"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="col-12">
                 <label for="">File</label>
                 @if (isset($data->file))

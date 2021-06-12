@@ -56,12 +56,7 @@
             <tr>
                 <th width="7%">Aplikasi</th>
                 <th width="1%" class="text-center">:</th>
-                <th width="18%" >{{ $data->application->name }}</th>
-                <th width="7%">Alarm Pengingat</th>
-                <th width="1%" class="text-center">:</th>
-                <th width="18%" >{{ date("h:i:s", strtotime($data->alarm)) }}</th>
-            </tr>
-            <tr>
+                <th width="18%" >{{ $data->application->name }}</th>=
                 <th width="7%">Programmer</th>
                 <th width="1%" class="text-center">:</th>
                 <th width="18%" >
@@ -69,6 +64,8 @@
                         - {{$item->user->name}}<br>
                     @endforeach
                 </th>
+            </tr>
+            <tr>
                 <th width="7%">File</th>
                 <th width="1%" class="text-center">:</th>
                 <th width="18%" >

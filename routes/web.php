@@ -24,6 +24,9 @@ Route::get('/postforgot', 'Auth\ForgotPasswordController@postforgot')->name('pos
 Route::group(['middleware' => ['auth']], function() {
 
     Route::get('/', 'HomeController@index')->name('dashboards');
+    Route::get('calender', 'HomeController@index')->name('calender');
+    Route::get('alarms','AlarmController@index')->name('alarms.index');
+    Route::post('alarms/store','AlarmController@store')->name('alarms.store');
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');
     Route::resource('forums','ForumController');

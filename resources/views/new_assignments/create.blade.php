@@ -100,19 +100,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label>Alarm Pengingat</label>
-                            <div class="input-group date">
-                                <input type="time" name="alarm" class="form-control"/>
-                                <div class="input-group-append">
-                                    <span class="input-group-text">
-                                        <i class="la la-calendar"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                
                     <div class="col-12">
                         <label for="">File</label>
                         <div class="clone-form">

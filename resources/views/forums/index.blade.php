@@ -95,6 +95,7 @@
 
     $(document).ready(function() {
         load();
+        // console
         var form2 = $("#forum");
         form2.validate({
             errorClass: "my-error-class",

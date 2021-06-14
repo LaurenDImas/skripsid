@@ -4,8 +4,8 @@
     <div class="d-flex flex-column flex-root">
         <!--begin::Loginblade-->
         <div class="login login-4 login-signin-on d-flex flex-row-fluid" id="kt_login">
-            <div class="d-flex flex-center flex-row-fluid bgi-size-cover bgi-position-top bgi-no-repeat" style="background-image: url({{asset('assets/media/bg/bg-3.jpg')}})">
-                <div class="login-form text-center p-7 position-relative overflow-hidden">
+            <div class="d-flex flex-center flex-row-fluid bgi-size-cover bgi-position-top bgi-no-repeat" style="background-image: url({{asset('assets/media/bg/bg.jpg')}})">
+                <div class="login-form text-center p-7 position-relative overflow-hidden bg-white">
                     <!--begin::Login Header-->
                     <div class="d-flex flex-center mb-15">
                         <a href="#">
@@ -16,7 +16,7 @@
                     <!--begin::Login Sign in form-->
                     <div class="login-signin">
                         <div class="mb-20">
-                            <h3>Sign In To Admin</h3>
+                            <h3>Sign In</h3>
                             <div class="text-muted font-weight-bold">Enter your details to login to your account:</div>
                         </div>
                         <form class="form" id="kt_login_signin_form" method="POST">

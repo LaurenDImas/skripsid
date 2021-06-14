@@ -78,7 +78,7 @@
                             <div class="card-header">
                                 <div class="card-title">
                                     <h3 class="card-label">
-                                        Basic Calendar
+                                        Assignments Calendar
                                     </h3>
                                 </div>
                             </div>

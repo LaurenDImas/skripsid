@@ -26,6 +26,7 @@
                        <img alt="Laravel" src="{{asset('assets/media/icons/user.png')}}" width="40">   
                        @endif
                     </div>
+                    {{-- s --}}
                 </div>
                 <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg p-0 mt-3">
                     <div class="d-flex align-items-center justify-content-between flex-wrap p-8 bgi-size-cover bgi-no-repeat rounded-top" style="background-image: url({{url('assets/media/bg/bg-5.jpg')}})">

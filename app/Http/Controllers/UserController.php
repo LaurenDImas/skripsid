@@ -12,7 +12,7 @@ use DB;
 use Hash;
 use DataTables;
 use Auth;
-
+use App\Forum;
     
 class UserController extends Controller
 {
@@ -212,6 +212,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
+            $forum = Forum::where('created_by',$id);
+            $forum->delete();
             $delete = self::$modelName::find($id);
             $delete->delete();
         } catch (\Throwable $th) {

@@ -71,7 +71,7 @@
     <script>
     
     // alert(2);
-    var pusher = new Pusher('07ef8f55af940e20346c', {
+    var pusher = new Pusher('e5b0d441d469491b2888', {
         encrypted: true,
         cluster: "ap1"
     });
@@ -149,9 +149,44 @@
                 }
             })
         });
+        
     });  
+    $(document).on('click', '.btn-delete-record-forum', function() {
+        var dataUrl = $(this).data('url');
+        Swal.fire({
+            title: "Confirm to delete the data!",
+            icon: 'warning',
+            confirmButtonText: 'Delete',
+            confirmButtonColor: '#FFA800',
+            showCancelButton: true,
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: dataUrl,
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: "Processing The Request.",
+                            onOpen: function() {
+                                Swal.showLoading()
+                            }
+                        })
+                    },
+                }).done(function(rsp) {
+                    // load();
+                    Swal.close();
+                    if (rsp.response != 200) {
+                        Swal.fire("Failed!", "Something Went Wrong!", "warning");
+                        return false;
+                    }
+                });
+            }
+        })
+    })
+    
+
     $(document).on('click','.forum-reply-submit',function(e) {
-        e.preventDefault;
+        e.preventDefault();
         
         var a       = $(this),
             open  = a.attr('data-open'),
@@ -178,7 +213,7 @@
                 {
                     KTApp.unblock($("#reply"+reply),{});
                     $('#komentar-'+reply).val('');
-                    load(open);
+                    // load(open);
                 }
             });
     });
@@ -193,7 +228,7 @@
                 var results = e.results;
                 html     = "",
                 bodyInternal     = $('.card-forum');
-                dataForm(results,html,bodyInternal)
+                dataForm(results,html,bodyInternal);
                 $("#reply-comment-"+reply).addClass('show');
             },
         })
@@ -218,24 +253,14 @@
                 +'<div class="start-forum" style="width:100%">'
                     +'<div class="user-comment m-0 p-0">'
                         +'<div class="row">'
-                        +'<div class="col-md-10">'
-                        +'<h6>'+item.user.name+'</h6>'
-                        +'<p>'+item.komentar+'</p>'
-                        +'</div>'
-                        +'<div class="col-md-2">'
-                        +'<div class="dropdown text-right">'
-                        // +'<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">'
-                        // +'<i class="la la-cog" ></i>'
-                        // +'</a>'
-                        +'<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">'
-                        // +'<ul class="nav nav-hoverable flex-column">'
-                        // // +'<li class="nav-item"><a class="nav-link" href="users/5/edit"><i class="nav-icon la la-edit"></i><span class="nav-text">Edit Details</span></a></li>'
-                        // // +'<li class="nav-item"><a class="nav-link btn-delete-record" href="javascript:;" data-url="users/5"><i class="nav-icon la la-trash "></i><span  class="nav-text">Delete</span></a></li>'
-                        // +'</ul>'
-                        +'</div>'
-                        +'</div>'
-                        +'</div>'
-                        +'</div>'
+                            +'<div class="col-md-10">'
+                                +'<h6>'+item.user.name+'</h6>'
+                                +'<p>'+item.komentar+'</p>'
+                            +'</div>';
+                            if(item.user.id=={{Auth::user()->id}}){
+                                html += deleteUtama(item.id);
+                            }
+                        html+='</div>'
                     +'</div>'
                     +'<div class="icon-comment">'
                         +'<span><i class="fas fa-clock mr-2"></i>'+formate(item.updated_at)+'</span>'
@@ -259,8 +284,15 @@
                                     +'<img src="{{asset('assets/media/icons/user.png')}}" width="30px" height="30px" alt="">&nbsp;'
                                     +'<div class="start-forum" style="width:100%">'
                                         +'<div class="user-comment mb-3">'
-                                            +'<h6 class="m-0 p-0">'+item2.user.name+'</h6>'
-                                            +'<p class="m-0 p-1">'+item2.komentar+'</p>'
+                                            +'<div class="row">'
+                                                +'<div class="col-md-10">'
+                                                    +'<h6>'+item2.user.name+'</h6>'
+                                                    +'<p>'+item2.komentar+'</p>'
+                                                +'</div>';
+                                                if(item2.user.id=={{Auth::user()->id}}){
+                                                    html += deleteUtama(item2.id);
+                                                }
+                                            html+='</div>'
                                         +'</div>'
                                         +'<div class="icon-comment">'
                                             +'<span><i class="fas fa-clock m-0"></i>&nbsp;&nbsp;&nbsp;Posted&nbsp;&nbsp;</span>'
@@ -287,6 +319,21 @@
         bodyInternal.html(html);
         // load();
     }
-    
+    function deleteUtama(dataUrl){
+        html = ""; 
+        html +='<div class="col-md-2">'
+                +'<div class="dropdown text-right">'
+                    +'<a href="javascript:;" class="btn btn-sm btn-clean btn-icon" data-toggle="dropdown">'
+                        +'<i class="la la-cog" ></i>'
+                    +'</a>'
+                    +'<div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">'
+                        +'<ul class="nav nav-hoverable flex-column">'
+                            +'<li class="nav-item"><a class="nav-link btn-delete-record-forum" href="javascript:;" data-url="forums/'+dataUrl+'"><i class="nav-icon la la-trash "></i><span  class="nav-text">Delete</span></a></li>'
+                        +'</ul>'
+                    +'</div>'
+                +'</div>'
+            +'</div>';
+            return html;
+    }
     </script>
 @endsection

@@ -104,8 +104,34 @@ class ForumController extends Controller
      * @param  \App\Forum  $forum
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Forum $forum)
+    public function destroy(Request $request,$id)
     {
-        //
+        try {
+            
+            $forum = Forum::where('id',$id);
+            $forum->delete();
+            $detail = Forum::where('parent_id',$id);
+            $detail->delete();
+            
+            $options =  [
+                'cluster' => 'ap1',
+                'useTLS' => true,
+            ];
+
+            $pusher = new Pusher(
+                env('PUSHER_APP_KEY'),
+                env('PUSHER_APP_SECRET'),
+                env('PUSHER_APP_ID'),
+                $options
+            );
+
+            $message= "Hello Cloudways";
+
+            //Send a message to notify channel with an event name of notify-event
+            $pusher->trigger('priority', 'App\\Events\\Priority', $message);
+        } catch (\Throwable $th) {
+            return response()->json(['response' => 500, $th]);
+        }
+        return response()->json(['response' => 200]);
     }
 }

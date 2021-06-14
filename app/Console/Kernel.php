@@ -28,9 +28,9 @@ class Kernel extends ConsoleKernel
     {   
         $description = Alarm::first();
         $schedule->command('alarm:day')
-            ->weekdays(date("G:i", strtotime( $description->alarm )))
-            ->timezone('Asia/Jakarta')
-            ->sendOutputTo("NUL");
+            ->weekdays()
+            ->dailyAt(date("G:i", strtotime( $description->alarm )))
+            ->timezone('Asia/Jakarta');
     }
 
     /**

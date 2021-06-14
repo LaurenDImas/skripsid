@@ -9,7 +9,6 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\str;
 
-use App\Http\Requests\AlarmRequest;
 use DB;
 use Hash;
 use DataTables;
@@ -34,8 +33,18 @@ class AlarmController extends Controller
      */
     public function index(Request $request)
     {
-
         $data = Alarm::first();
+        if(!empty($data)){
+            $data = Alarm::first()->toArray();
+        }else{
+            $data =[
+                'id' => "",
+                'alarm' => "",
+                'subject' => "",
+                'description' => ""
+            ];
+        }
+        // dd($data);
 
         $pageTitle = self::$pageTitle;
         $pageDescription = self::$pageTitle . ' List Data';
@@ -48,9 +57,14 @@ class AlarmController extends Controller
 
     public function store(Request $request)
     {   
+        $alarm = Alarm::find($request['id']);
         $input = $request->all();
         $input['alarm']     = date("G:i:s", strtotime( $input['alarm'] ));
-        self::$modelName::create($input);
+        if(empty($alarm)){
+            self::$modelName::create($input);
+        }else{
+            $alarm->update($input);
+        }
         return redirect()->route('alarms.index')
                         ->with('success','Alarm created successfully');
     }

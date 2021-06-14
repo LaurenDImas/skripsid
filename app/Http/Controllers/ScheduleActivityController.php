@@ -234,7 +234,7 @@ class ScheduleActivityController extends Controller
         $application = Application::pluck('name','id')->all();
         $user = User::where('role_id',4)->get();
         $data = self::$modelName::find($id);
-
+        dd($data);
         $pageTitle = self::$pageTitle;
         $pageDescription = self::$pageTitle . ' Edit Data';
         $page_breadcrumbs = [

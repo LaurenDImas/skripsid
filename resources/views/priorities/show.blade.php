@@ -32,10 +32,10 @@
     <div class="card-body"> 
          <table class="table  table-hover">
             <tr>
-                <th width="7%">Date</th>
+                <th width="7%">Due Date</th>
                 <th width="1%" class="text-center">:</th>
                 <th width="18%" >{{ date("d-m-Y", strtotime($data->newAssignment->date)) }}</th>
-                <th width="7%">Project</th>
+                <th width="7%">Institute</th>
                 <th width="1%" class="text-center">:</th>
                 <th width="18%" >{{ $data->newAssignment->application->project->name }}</th>
             </tr>
@@ -313,7 +313,7 @@ $(function () {
                 name: 'date'
             },
             {
-                title: "Project", 
+                title: "Institute", 
                 data: 'application.project.name', 
                 width:"20%",
                 name: 'application.project.name'
@@ -325,7 +325,7 @@ $(function () {
                 name: 'application.name'
             },
             {
-                title: "Status Pekerjaan", 
+                title: "Status", 
                 data: 'status', 
                 width:"20%",
                 name: 'status',

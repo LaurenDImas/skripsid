@@ -17,7 +17,7 @@ use DataTables;
     
 class ProjectController extends Controller
 {
-    public static $pageTitle        ='Project';
+    public static $pageTitle        ='Institute';
     public static $modelName        ='App\Project';
     public static $folderPath       ='projects';
     public static $permissionName   ='project';

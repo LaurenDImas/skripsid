@@ -42,11 +42,11 @@ class AlarmJob extends Command
     public function handle()
     {
 
-        $users = User::where('id',7)->get();
+        $users = User::get();
         $description = Alarm::first()->toArray();
         foreach ($users as $user) {
             Mail::send('emails.alarm', ["data" =>  $description], function ($msg) use ($user) {
-                $msg->subject('test')->from('laurenpratama777@gmail.com', 'Manager Development')->to($user->email);
+                $msg->from('laurenpratama777@gmail.com', 'Manager Development')->to($user->email);
             });
         }
         $this->info('Word of the Day sent to All Users');

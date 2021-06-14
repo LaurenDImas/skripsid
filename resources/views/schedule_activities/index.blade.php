@@ -32,8 +32,8 @@
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}" type="text/javascript"></script>
     <script>
         var items = {
-            "new":    "New Daily Assessment",
-            "priority": "Priority"
+            "new":    "Daily Assignments",
+            "priority": "Priority Assignments"
         };
         $(function () {
             var table     = $('.kt_datatable');
@@ -68,12 +68,12 @@
                         },
                     @endif
                     {
-                        title: "Deadline", 
+                        title: "Due Date", 
                         data: 'id', 
-                        width:"40%",
+                        width:"20%",
                         name: 'id',
                         render:function(id, e, t, n) {
-                            return t.new_assignment.date +" - "+ t.new_assignment.alarm;
+                            return t.new_assignment.date;
                         },
                     },
                     {
@@ -86,7 +86,7 @@
                         },
                     },
                     {
-                        title: "Project", 
+                        title: "Institute", 
                         data: 'new_assignment.application.project.name', 
                         width:"20%",
                         name: 'new_assignment.application.project.name'

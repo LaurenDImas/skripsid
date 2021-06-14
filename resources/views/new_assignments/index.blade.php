@@ -72,7 +72,7 @@
                         orderable:true
                     },
                     {
-                        title: "Deadline", 
+                        title: "Due Date", 
                         data: 'id', 
                         width:"20%",
                         name: 'id',
@@ -95,7 +95,7 @@
                         }
                     },
                     {
-                        title: "Project", 
+                        title: "Institute", 
                         data: 'application.project.name', 
                         width:"20%",
                         name: 'application.project.name'
@@ -107,7 +107,7 @@
                         name: 'application.name'
                     },
                     {
-                        title: "Status Pekerjaan", 
+                        title: "Status", 
                         data: 'status', 
                         width:"20%",
                         name: 'status',
@@ -154,11 +154,11 @@
             var html = "";
             // alert(status);
             if(status == "new"){
-                html ='<option value="new" selected>New Daily Assignment</option>'
-                        +'<option value="priority">Priority</option>';
+                html ='<option value="new" selected>Daily Assignments</option>'
+                        +'<option value="priority">Priority Assignments</option>';
             }else if(status == "priority"){
-                html ='<option value="new">New Daily Assignment</option>'
-                        +'<option value="priority" selected>Priority</option>';
+                html ='<option value="new">Daily Assignments</option>'
+                        +'<option value="priority" selected>Priority Assignments</option>';
             }
             return html;    
         }

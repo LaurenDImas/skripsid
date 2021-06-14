@@ -25,7 +25,7 @@ use App\Jobs\SendEmailNewAssignment;
     
 class NewAssignmentController extends Controller
 {
-    public static $pageTitle        ='New Assignment';
+    public static $pageTitle        ='New Assignments';
     public static $modelName        ='App\NewAssignment';
     public static $folderPath       ='new_assignments';
     public static $permissionName   ='new-assignment';

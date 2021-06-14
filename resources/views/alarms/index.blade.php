@@ -21,6 +21,9 @@
         </div>
         <!--begin::Form-->
         {!! Form::open(array('route' => ''.$permissionName.'.store','method'=>'POST', 'files' => true)) !!}
+            <input type="hidden" name="id" @if (!empty($data['id']))
+                                        value="{{ $data['id']}}"
+                                    @endif>
             <div class="card-body">
                 <div class="col-12">
                     <div class="form-group">
@@ -30,13 +33,29 @@
                             </div>
                             <div class="col-md-10"> 
                                 <div class="input-group date">
-                                    <input type="time" name="alarm" class="form-control" value="{{ date("G:i:s", strtotime( $data->alarm ))}}" />
+                                    <input type="time" name="alarm" class="form-control" @if (!empty($data['alarm']))
+                                        value="{{ $data['alarm']}}"
+                                    @endif  />
                                     <div class="input-group-append">
                                         <span class="input-group-text">
                                             <i class="la la-calendar"></i>
                                         </span>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="col-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2 d-flex align-items-center">
+                                <label for="exampleSelect1">Subject</label> 
+                            </div>
+                            <div class="col-md-10">
+                                <input type="text"  class="form-control" name="subject" @if (!empty($data['subject']))
+                                    value="{{ $data['subject'] }}"
+                                @endif>
                             </div>
                         </div>
                     </div>
@@ -48,7 +67,9 @@
                                 <label for="exampleSelect1">Description</label> 
                             </div>
                             <div class="col-md-10">
-                                <textarea name="description" id="note"> {!! $data->description   !!}</textarea>
+                                <textarea name="description" id="note"> @if (!empty($data['description']))
+                                    {!! $data['description']   !!}
+                                @endif </textarea>
                             </div>
                         </div>
                     </div>

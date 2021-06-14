@@ -56,7 +56,7 @@
             </div>
             <div class="col-6">
                 <div class="form-group">
-                    <label>Date
+                    <label>Due Date
                         <span class="text-danger">*</span>
                     </label>
                     <div class="input-group date">
@@ -71,7 +71,7 @@
             </div>
             <div class="col-6">        
                 <div class="form-group">
-                    <label for="exampleSelect1">Project
+                    <label for="exampleSelect1">Institute
                         <span class="text-danger">*</span>
                     </label>    
                     {!! Form::select('project_id', 

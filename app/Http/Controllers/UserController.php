@@ -153,7 +153,6 @@ class UserController extends Controller
     public function edit($id)
     {
         $data = self::$modelName::find($id);
-        // dd($user);
         $roles = Role::pluck('name','name')->all();
         $userRole = $data->roles->pluck('name','name')->all();
     
@@ -201,6 +200,36 @@ class UserController extends Controller
     
         return redirect()->route('users.index')
                         ->with('success','User updated successfully');
+    }
+
+    public function updateProfile()
+    {
+        $data = self::$modelName::find(Auth::user()->id);
+        $pageTitle = "Update";
+        $pageDescription = self::$pageTitle . ' Profile';
+        $page_breadcrumbs = [
+            url(self::$folderPath . '/') => "List " . $pageTitle,
+            url(self::$folderPath . '/create') => $pageDescription
+        ];
+
+        $permissionName = self::$folderPath;
+        return view(self::$folderPath . '.update-profile', compact('pageTitle', 'pageDescription', 'page_breadcrumbs','permissionName','data'));
+    }
+    
+    public function updateProfileStore(Request $request,$id)
+    {   
+        $input = $request->all();
+        if(!empty($input['photo'])){
+            $input['photo'] = $request->file('photo')->store('assets/user','public');
+        }
+        $input['role_id'] = Auth::user()->role_id;
+        $input['password'] = Hash::make($input['password']);
+        $user = self::$modelName::find($id);
+        // dd($user);
+        $user->update($input);
+
+        return redirect()->back()
+                        ->with('success','Profile has been updated');
     }
     
     /**

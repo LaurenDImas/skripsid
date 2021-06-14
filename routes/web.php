@@ -29,6 +29,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('alarms/store','AlarmController@store')->name('alarms.store');
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');
+    Route::get('update-profile','UserController@updateProfile');
+    Route::patch('update-profile/{id}','UserController@updateProfileStore')->name('update-profile.update');
     Route::resource('forums','ForumController');
     Route::resource('projects','ProjectController');
     Route::resource('applications','ApplicationController');

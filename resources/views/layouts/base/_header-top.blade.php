@@ -20,13 +20,13 @@
                     <div class="btn btn-icon btn-hover-transparent-white w-sm-auto d-flex align-items-center btn-lg px-2">
                         <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,</span>
                         <span class=" font-weight-bolder font-size-base d-none d-md-inline mr-3">{{isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email}}</span>
-                        <img alt="Laravel" src="{{asset('assets/media/icons/user.png')}}" width="40">  
+                       <img src="{{Storage::url($data->photo)}}" alt="" width="50" height="50">  
                     </div>
                 </div>
                 <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg p-0 mt-3">
                     <div class="d-flex align-items-center justify-content-between flex-wrap p-8 bgi-size-cover bgi-no-repeat rounded-top" style="background-image: url({{url('assets/media/bg/bg-5.jpg')}})">
                         <div class="d-flex align-items-center mr-2">
-                                <img alt="Laravel" src="{{asset('assets/media/icons/user.png')}}" width="40">
+                               <img src="{{Storage::url($data->photo)}}" alt="" width="50" height="50">
                             <div class="text-white m-0 flex-grow-1 ml-3 mr-3 font-size-h5">{{isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email}}</div>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
 
                     <div class="navi navi-spacer-x-0 pt-5">
                         {{-- sadsa --}}
-                        {{-- <a href="#" class="navi-item px-8">
+                        <a href="{{ url('update-profile') }}" class="navi-item px-8">
                             <div class="navi-link">
                                 <div class="navi-icon mr-2">
                                     <i class="flaticon2-calendar-3 text-success"></i>
@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </a> --}}
+                        </a>
                         <div class="navi-separator mt-3"></div>
                         <div class="navi-footer  px-8 py-5">
                             <a  class="btn btn-light-primary font-weight-bold"   href="{{ route('logout') }}"

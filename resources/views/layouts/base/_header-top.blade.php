@@ -20,13 +20,21 @@
                     <div class="btn btn-icon btn-hover-transparent-white w-sm-auto d-flex align-items-center btn-lg px-2">
                         <span class="text-muted font-weight-bold font-size-base d-none d-md-inline mr-1">Hi,</span>
                         <span class=" font-weight-bolder font-size-base d-none d-md-inline mr-3">{{isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email}}</span>
-                       <img src="{{Storage::url($data->photo)}}" alt="" width="50" height="50">  
+                       @if (!empty(Auth::user()->photo))
+                       <img src="{{Storage::url(Auth::user()->photo)}}" alt="" width="50" height="50">  
+                       @else 
+                       <img alt="Laravel" src="{{asset('assets/media/icons/user.png')}}" width="40">   
+                       @endif
                     </div>
                 </div>
                 <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-lg p-0 mt-3">
                     <div class="d-flex align-items-center justify-content-between flex-wrap p-8 bgi-size-cover bgi-no-repeat rounded-top" style="background-image: url({{url('assets/media/bg/bg-5.jpg')}})">
                         <div class="d-flex align-items-center mr-2">
-                               <img src="{{Storage::url($data->photo)}}" alt="" width="50" height="50">
+                            @if (!empty(Auth::user()->photo))
+                            <img src="{{Storage::url(Auth::user()->photo)}}" alt="" width="50" height="50">
+                            @else 
+                            <img alt="Laravel" src="{{asset('assets/media/icons/user.png')}}" width="40"> 
+                            @endif   
                             <div class="text-white m-0 flex-grow-1 ml-3 mr-3 font-size-h5">{{isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email}}</div>
                         </div>
                     </div>

@@ -251,9 +251,13 @@
         
         $.each(results, function(key,item){
             
-            html +='<div class="d-flex forum mb-4">'
-                +'<img src="{{asset('assets/media/icons/user.png')}}" width="30px" height="30px" alt="">&nbsp;'
-                +'<div class="start-forum" style="width:100%">'
+            html +='<div class="d-flex forum mb-4">';
+                if(item.user.photo === null){
+                    html+='<img src="{{asset("/user/ouFppsWC63KzEdzlQeC7tthpzT9ARn7fA4c30OmH.jpg")}}" width="30px" height="30px" alt="">&nbsp;';
+                }else{
+                    html+='<img src="/storage/'+item.user.photo+'" width="30px" height="30px" alt="">&nbsp;';
+                }
+                html+='<div class="start-forum" style="width:100%">'
                     +'<div class="user-comment m-0 p-0">'
                         +'<div class="row">'
                             +'<div class="col-md-10">'
@@ -284,8 +288,12 @@
                     +'<div class="collapse" id="reply-comment-'+item.id+'">';
                         $.each(item.comment, function(key2,item2){
                             html+='<div class="d-flex mb-4" >'
-                                    +'<img src="{{asset('assets/media/icons/user.png')}}" width="30px" height="30px" alt="">&nbsp;'
-                                    +'<div class="start-forum" style="width:100%">'
+                                    if(item.user.photo === null){
+                                        html+='<img src="{{asset('assets/media/icons/user.png')}}" width="30px" height="30px" alt="">&nbsp;';
+                                    }else{
+                                        html+='<img src="/storage/'+item2.user.photo+'" width="30px" height="30px" alt="">&nbsp;';
+                                    }
+                                    html+='<div class="start-forum" style="width:100%">'
                                         +'<div class="user-comment mb-3">'
                                             +'<div class="row">'
                                                 +'<div class="col-md-10">'

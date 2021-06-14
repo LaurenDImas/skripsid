@@ -218,12 +218,20 @@ class UserController extends Controller
     
     public function updateProfileStore(Request $request,$id)
     {   
+        $this->validate($request, [
+            'email' => 'required|email|unique:users,email,'.$id,
+            'password' => 'same:confirm-password'
+        ]);
         $input = $request->all();
         if(!empty($input['photo'])){
             $input['photo'] = $request->file('photo')->store('assets/user','public');
         }
         $input['role_id'] = Auth::user()->role_id;
-        $input['password'] = Hash::make($input['password']);
+        if(!empty($input['password'])){ 
+            $input['password'] = Hash::make($input['password']);
+        }else{
+            $input = array_except($input,array('password'));    
+        }
         $user = self::$modelName::find($id);
         // dd($user);
         $user->update($input);

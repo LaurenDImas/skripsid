@@ -152,6 +152,7 @@
         
     });  
     $(document).on('click', '.btn-delete-record-forum', function() {
+        e.preventDefault();
         var dataUrl = $(this).data('url');
         Swal.fire({
             title: "Confirm to delete the data!",
@@ -213,7 +214,7 @@
                 {
                     KTApp.unblock($("#reply"+reply),{});
                     $('#komentar-'+reply).val('');
-                    // load(open);
+                    load(open);
                 }
             });
     });

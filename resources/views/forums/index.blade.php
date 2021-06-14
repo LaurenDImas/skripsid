@@ -152,39 +152,7 @@
         });
         
     });  
-    $(document).on('click', '.btn-delete-record-forum', function() {
-        e.preventDefault();
-        var dataUrl = $(this).data('url');
-        Swal.fire({
-            title: "Confirm to delete the data!",
-            icon: 'warning',
-            confirmButtonText: 'Delete',
-            confirmButtonColor: '#FFA800',
-            showCancelButton: true,
-        }).then(function(result) {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: 'DELETE',
-                    url: dataUrl,
-                    beforeSend: function() {
-                        Swal.fire({
-                            title: "Processing The Request.",
-                            onOpen: function() {
-                                Swal.showLoading()
-                            }
-                        })
-                    },
-                }).done(function(rsp) {
-                    // load();
-                    Swal.close();
-                    if (rsp.response != 200) {
-                        Swal.fire("Failed!", "Something Went Wrong!", "warning");
-                        return false;
-                    }
-                });
-            }
-        })
-    })
+
     
 
     $(document).on('click','.forum-reply-submit',function(e) {
@@ -219,6 +187,39 @@
                 }
             });
     });
+        $(document).on('click', '.btn-delete-record-forum', function() {
+        // e.preventDefault();
+        var dataUrl = $(this).data('url');
+        Swal.fire({
+            title: "Confirm to delete the data!",
+            icon: 'warning',
+            confirmButtonText: 'Delete',
+            confirmButtonColor: '#FFA800',
+            showCancelButton: true,
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: dataUrl,
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: "Processing The Request.",
+                            onOpen: function() {
+                                Swal.showLoading()
+                            }
+                        })
+                    },
+                }).done(function(rsp) {
+                    if (rsp.response != 200) {
+                        Swal.fire("Failed!", "Something Went Wrong!", "warning");
+                        return false;
+                    }
+                    load();
+                    Swal.close();
+                });
+            }
+        })
+    })
     function load(reply){
         $.ajax({
             url : "{{ route('forums.index') }}",

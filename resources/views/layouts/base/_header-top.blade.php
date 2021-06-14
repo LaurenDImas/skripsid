@@ -33,7 +33,7 @@
 
 
                     <div class="navi navi-spacer-x-0 pt-5">
-                        <a href="#" class="navi-item px-8">
+                        {{-- <a href="#" class="navi-item px-8">
                             <div class="navi-link">
                                 <div class="navi-icon mr-2">
                                     <i class="flaticon2-calendar-3 text-success"></i>
@@ -48,7 +48,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </a>
+                        </a> --}}
                         <div class="navi-separator mt-3"></div>
                         <div class="navi-footer  px-8 py-5">
                             <a  class="btn btn-light-primary font-weight-bold"   href="{{ route('logout') }}"

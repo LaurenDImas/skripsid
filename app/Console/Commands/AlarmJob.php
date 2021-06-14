@@ -41,8 +41,7 @@ class AlarmJob extends Command
      */
     public function handle()
     {
-
-        $users = User::get();
+        $user = User::where([['role_id',"=",4],['status',"=",1]])->get();
         $description = Alarm::first()->toArray();
         foreach ($users as $user) {
             Mail::send('emails.alarm', ["data" =>  $description], function ($msg) use ($user) {

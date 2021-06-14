@@ -41,6 +41,7 @@ class UserController extends Controller
                 DB::raw('@rownum := @rownum +1 as rownum'),
                 'id',
                 'name',
+                'status',
                 'email'
             );
             return Datatables::of($data)

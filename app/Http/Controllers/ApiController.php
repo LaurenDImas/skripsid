@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\ScheduleActivity;
 use App\NewAssignmentEmployee;
 use App\NewAssignment;
+use App\User;
 
 class ApiController extends Controller
 {
@@ -49,6 +50,20 @@ class ApiController extends Controller
         $status = NewAssignment::find($input['id']);
         // dd($status);
         $status->update($input); 
+        return response()->json([
+            'data' => $status,
+        ]);
+    }
+
+    
+    public function statusUser(Request $request){
+        $input = $request->all();
+        $input['status'] = $input['status'];
+        
+        $status = User::find($input['id']);
+        // dd($status);
+        $status->update($input); 
+       
         return response()->json([
             'data' => $status,
         ]);

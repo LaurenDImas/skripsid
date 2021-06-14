@@ -81,6 +81,22 @@
                         data: 'email', 
                         name: 'email'
                     },
+                    {
+                        title: "Status", 
+                        data: 'status', 
+                        width:"20%",
+                        name: 'status',
+                        render:function(status, e, t, n) {
+                            var checked = (status == 1) ? "checked" : "";
+                            var data = '<span class="switch switch-icon">'
+                                        +'<label>'
+                                                +'<input type="checkbox" '+checked+' data-id="'+t.id+'"  name="status" class="status" />'
+                                        +'<span></span>'
+                                        +'</label>'
+                                    +'</span>';
+                            return data;
+                        }
+                    },
                     { 
                         title: "Actions", 
                         data: 'action', 
@@ -92,5 +108,34 @@
                 ]
             });
         }); 
+
+        $('body').on('change','.status',function (e) {
+            e.preventDefault();
+            var status;
+            if ($(this).is(':checked')) {
+                status = 1;
+            } else {
+                status = 0
+            }
+            var id = $(this).data("id");
+                console.log(status);
+            $.ajax({
+                url : '{{ url('api/status_user') }}',
+                type: 'POST',
+                dataType: "JSON",
+                data: {
+                    "id" : id,
+                    "status" : status
+                },
+                beforeSend: function (xhr) {
+                },
+                success: function(res){
+                    var data = res.data;
+                },
+                error: function(e){
+                    swal.fire('Oops','Terjadi kesalahan','error');  
+                }
+            })
+        });
     </script>
 @endsection

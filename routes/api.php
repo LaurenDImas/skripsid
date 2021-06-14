@@ -20,4 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('application/{id}', 'ApiController@application')->name('api-application');
 Route::post('status_ass/', 'ApiController@statusAss')->name('api-status_ass');
+Route::post('status_user/', 'ApiController@statusUser')->name('api-status_user');
 Route::post('status_assignment/', 'ApiController@statusAssignment')->name('api-status_assignment');;

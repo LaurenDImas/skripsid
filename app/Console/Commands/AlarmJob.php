@@ -46,7 +46,7 @@ class AlarmJob extends Command
         $description = Alarm::first()->toArray();
         foreach ($users as $user) {
             Mail::send('emails.alarm', ["data" =>  $description], function ($msg) use ($user,$description) {
-                $msg->subject($description['subject'])->from('laurenpratama777@gmail.com', 'Manager Development')->to($user->email);
+                $msg->subject($description['subject'])->from('ramadhanty.mf03@gmail.com', 'Manager Development')->to($user->email);
             });
         }
         $this->info('Word of the Day sent to All Users');

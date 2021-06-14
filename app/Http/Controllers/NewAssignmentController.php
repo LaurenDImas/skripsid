@@ -92,7 +92,7 @@ class NewAssignmentController extends Controller
     public function create()
     {
         $project = Project::pluck('name','id')->all();
-        $user = User::where([['role_id',"=",4],['status',"=",1]])->get();
+        $user = User::where('role_id',4)->get();
         $data = NewAssignment::all();
         $pageTitle = self::$pageTitle;
         $pageDescription = self::$pageTitle . ' Add Data';

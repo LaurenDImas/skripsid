@@ -69,12 +69,12 @@
                         },
                     @endif
                     {
-                        title: "Deadline", 
+                        title: "Due Date", 
                         data: 'id', 
                         width:"40%",
                         name: 'id',
                         render:function(id, e, t, n) {
-                            return t.new_assignment.date +" - "+ t.new_assignment.alarm;
+                            return t.new_assignment.date;
                         },
                     },
                     {
@@ -82,6 +82,8 @@
                         data: 'new_assignment.assignment', 
                         width:"20%",
                         name: 'assignment', 
+                        searchable:true,
+                        orderable:false,
                         render:function(assignment) {
                             return items[assignment];
                         },
@@ -90,13 +92,17 @@
                         title: "Project", 
                         data: 'new_assignment.application.project.name', 
                         width:"20%",
-                        name: 'new_assignment.application.project.name'
+                        name: 'new_assignment.application.project.name',
+                        searchable:false,
+                        orderable:false
                     },
                     {
                         title: "Application", 
                         data: 'new_assignment.application.name', 
                         width:"20%",
-                        name: 'new_assignment.application.name'
+                        name: 'new_assignment.application.name',
+                        searchable:false,
+                        orderable:false
                     },
                     { 
                         title: "Actions", 

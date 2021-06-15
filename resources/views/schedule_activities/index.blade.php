@@ -81,6 +81,8 @@
                         data: 'new_assignment.assignment', 
                         width:"20%",
                         name: 'assignment', 
+                        searchable:true,
+                        orderable:false,
                         render:function(assignment) {
                             return items[assignment];
                         },
@@ -89,13 +91,17 @@
                         title: "Institute", 
                         data: 'new_assignment.application.project.name', 
                         width:"20%",
-                        name: 'new_assignment.application.project.name'
+                        name: 'new_assignment.application.project.name', 
+                        searchable:true,
+                        orderable:false
                     },
                     {
                         title: "Application", 
                         data: 'new_assignment.application.name', 
                         width:"20%",
-                        name: 'new_assignment.application.name'
+                        name: 'new_assignment.application.name', 
+                        searchable:true,
+                        orderable:false
                     },
                     { 
                         title: "Actions", 

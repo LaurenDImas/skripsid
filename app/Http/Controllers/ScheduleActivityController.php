@@ -19,6 +19,7 @@ use Auth;
 use DB;
 use Hash;
 use DataTables;
+use Crypt;
 
     
 class ScheduleActivityController extends Controller
@@ -68,7 +69,7 @@ class ScheduleActivityController extends Controller
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
                                 <ul class="nav nav-hoverable flex-column">
-                                    <li class="nav-item"><a class="nav-link" href="'.self::$folderPath.'/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="'.self::$folderPath.'/' . Crypt::encrypt($row->id) . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
                                 </ul>
                                 </div>
                             </div>
@@ -170,13 +171,15 @@ class ScheduleActivityController extends Controller
      */
     public function show($id)
     {
+        
+        $id = Crypt::decrypt($id);
         $data = self::$modelName::with(['application','application.project'])->select(
                 'schedule_activities.*'
             )->where('id',$id)->first();
         
         $items = [
-            "new"=>    "New Daily Assignment",
-            "priority"=> "Priority"
+            "new"=>    "Schdeule Activity",
+            "priority"=> "Priority Assignments"
         ];
         $assigmentEmployee = $this->assigmentEmployee($data->new_assignment_id,$data->created_by);
         
@@ -186,13 +189,14 @@ class ScheduleActivityController extends Controller
             url(self::$folderPath . '/') => "List " . $items[$assigmentEmployee->newAssignment->assignment],
             url(self::$folderPath . '/create') => $pageDescription
         ];
-        if($items[$assigmentEmployee->newAssignment->assignment] == "Priority"){
+        if($items[$assigmentEmployee->newAssignment->assignment] == "Priority Assignments"){
             // dd($assigmentEmployee->id);
-            $permissionName = "priorities/".$assigmentEmployee->id;
+            $permissionName1 = "priorities/".Crypt::encrypt($assigmentEmployee->id);
         }else{
-            $permissionName = self::$folderPath.'/'.$assigmentEmployee->id;
+            $permissionName1 = self::$folderPath.'/'.Crypt::encrypt($assigmentEmployee->id);
         }
-        return view(self::$folderPath . '.show', compact('pageTitle', 'pageDescription', 'page_breadcrumbs', 'permissionName','data'));
+        $permissionName = self::$folderPath;
+        return view(self::$folderPath . '.show', compact('pageTitle', 'pageDescription', 'page_breadcrumbs', 'permissionName1','permissionName','data'));
     }
     
     public function assigmentEmployee($new_assignment_id,$user_id){
@@ -230,6 +234,9 @@ class ScheduleActivityController extends Controller
      */
     public function edit(Request $request,$id)
     {   
+        
+        $id = Crypt::decrypt($id);
+        // dump($id);
         $project = Project::pluck('name','id')->all();
         $application = Application::pluck('name','id')->all();
         $user = User::where('role_id',4)->get();
@@ -242,8 +249,28 @@ class ScheduleActivityController extends Controller
         ];
 
         $permissionName = self::$folderPath;
+
+        $items = [
+            "new"=>    "Schdeule Activity",
+            "priority"=> "Priority Assignments"
+        ];
+        $assigmentEmployee = $this->assigmentEmployee($data->new_assignment_id,$data->created_by);
+        
+        $pageTitle = self::$pageTitle;
+        $pageDescription = $items[$assigmentEmployee->newAssignment->assignment] ." Detail";
+        $page_breadcrumbs = [
+            url(self::$folderPath . '/') => "List " . $items[$assigmentEmployee->newAssignment->assignment],
+            url(self::$folderPath . '/create') => $pageDescription
+        ];
+        if($items[$assigmentEmployee->newAssignment->assignment] == "Priority Assignments"){
+            // dd($assigmentEmployee->id);
+            $permissionName1 = "priorities/".Crypt::encrypt($assigmentEmployee->id);
+        }else{
+            $permissionName1 = self::$folderPath.'/'.Crypt::encrypt($assigmentEmployee->id);
+        }
+    
      
-        return view(self::$folderPath . '.edit', compact('pageTitle', 'pageDescription', 'page_breadcrumbs', 'permissionName','data','project','user','application'));
+        return view(self::$folderPath . '.edit', compact('pageTitle', 'pageDescription', 'page_breadcrumbs', 'permissionName','data','project','user','application','permissionName1'));
     }
     
     /**
@@ -255,6 +282,7 @@ class ScheduleActivityController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $input = $request->all();
         if($request->hasFile('file')){
             foreach($request->file('file') as $image){
@@ -287,11 +315,13 @@ class ScheduleActivityController extends Controller
             ['user_id',Auth::user()->id],
             ['new_assignment_id', $upload->new_assignment_id]
             ])->first();
+        
+        
         if($check->assignment == "priority"){
-            return redirect()->to('priorities/'.$getId->id)
+            return redirect()->to('priorities/'.Crypt::encrypt($getId->id))
             ->with('success','Priority updated successfully');
         }else{
-            return redirect()->to('schedule_activities/'.$getId->id)
+            return redirect()->to('schedule_activities/'.Crypt::encrypt($getId->id))
                         ->with('success','Schedule Activity updated successfully');
         }
        
@@ -305,7 +335,9 @@ class ScheduleActivityController extends Controller
      */
     public function destroy($id)
     {
+        $id = Crypt::decrypt($id);
         try {
+            
             $data = ScheduleActivity::findOrFail($id);
             $photo = json_decode($data->file);
             foreach($photo as $key => $value) {

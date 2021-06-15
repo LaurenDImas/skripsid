@@ -22,6 +22,7 @@ use DB;
 use Hash;
 use DataTables;
 use Auth;
+use Crypt;
 
     
 class PriorityController extends Controller
@@ -56,11 +57,11 @@ class PriorityController extends Controller
                     ['user_id',"=",Auth::user()->id],
                 ]);
             }
-            
             $data = $data->where([
                 ["assignment","=","priority"]
-            ])
-            ->orderBy('date','DESC');
+            ]);
+            $data = $data->orderBy('date','DESC')->get();
+            // dd($data);
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {
                     $btn = '
@@ -70,7 +71,7 @@ class PriorityController extends Controller
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
                                 <ul class="nav nav-hoverable flex-column">
-                                    <li class="nav-item"><a class="nav-link" href="'.self::$folderPath.'/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="'.self::$folderPath.'/' . Crypt::encrypt($row->id) . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
                                 </ul>
                                 </div>
                             </div>
@@ -99,8 +100,9 @@ class PriorityController extends Controller
      */
     public function show(Request $request, $id)
     {
-
+        
         if ($request->ajax()) {
+            // dd($id);
             $str = str_replace('show','',$id);
             
             DB::statement(DB::raw('set @rownum=0'));
@@ -126,11 +128,11 @@ class PriorityController extends Controller
                         $link = "priorities";
                     }
                     if(Auth::user()->role_id == 4){
-                        $btn =  '<li class="nav-item"><a class="nav-link"  href="../'.$link.'/' . $row->id . '/edit"><i class="nav-icon la la-edit"></i><span class="nav-text">Edit</span></a></li>
-                                    <li class="nav-item"><a class="nav-link"  href="../'.$link.'/show/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
-                                    <li class="nav-item"><a class="nav-link btn-delete-record" href="javascript:;" data-url="../schedule_activities/delete/' . $row->id . '"><i class="nav-icon la la-trash "></i><span class="nav-text">Delete</span></a></li>';
+                        $btn =  '<li class="nav-item"><a class="nav-link"  href="../'.$link.'/' . Crypt::encrypt($row->id) . '/edit"><i class="nav-icon la la-edit"></i><span class="nav-text">Edit</span></a></li>
+                                    <li class="nav-item"><a class="nav-link"  href="../'.$link.'/show/' . Crypt::encrypt($row->id) . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
+                                    <li class="nav-item"><a class="nav-link btn-delete-record" href="javascript:;" data-url="../schedule_activities/delete/' . Crypt::encrypt($row->id) . '"><i class="nav-icon la la-trash "></i><span class="nav-text">Delete</span></a></li>';
                     }else{
-                        $btn =  '<li class="nav-item"><a class="nav-link"  href="../'.$link.'/show/' . $row->id . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>';
+                        $btn =  '<li class="nav-item"><a class="nav-link"  href="../'.$link.'/show/' . Crypt::encrypt($row->id) . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>';
                     }
                     $btn = '
                             <div class="dropdown dropdown-inline">
@@ -150,12 +152,12 @@ class PriorityController extends Controller
                 ->make(true);
         }else{
             
+            $id = Crypt::decrypt($id);
             $items = [
                 "new"=>    "Schdeule Activity",
                 "priority"=> "Priority Assignments"
             ];
             $data = $this->assigmentEmployee($id);
-            
             $pageDescription = $items[$data->newAssignment->assignment];
             $page_breadcrumbs = [
                 url(self::$folderPath . '/') => "List " . $items[$data->newAssignment->assignment],
@@ -163,7 +165,7 @@ class PriorityController extends Controller
             ];
             $edit = "";
             
-            if($items[$data->newAssignment->assignment] == "Priority"){
+            if($items[$data->newAssignment->assignment] == "Priority Assignments"){
                 $permissionName = self::$folderPath;
             }else{
                 $permissionName = "schedule_activities";

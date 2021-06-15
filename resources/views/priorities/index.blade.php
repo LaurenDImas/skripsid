@@ -71,7 +71,7 @@
                     {
                         title: "Due Date", 
                         data: 'id', 
-                        width:"40%",
+                        width:"20%",
                         name: 'id',
                         render:function(id, e, t, n) {
                             return t.new_assignment.date;

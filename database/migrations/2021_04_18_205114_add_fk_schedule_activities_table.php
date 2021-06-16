@@ -19,7 +19,7 @@ class AddFkScheduleActivitiesTable extends Migration
             $table->foreign('new_assignment_id')->references('id')->on('new_assignments')->onDelete('cascade');
         });
     }
-
+66
     /**
      * Reverse the migrations.
      *

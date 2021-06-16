@@ -89,7 +89,7 @@
                         },
                     },
                     {
-                        title: "Project", 
+                        title: "Institute", 
                         data: 'new_assignment.application.project.name', 
                         width:"20%",
                         name: 'new_assignment.application.project.name',

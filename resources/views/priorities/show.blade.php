@@ -288,7 +288,7 @@ $(function () {
         responsive: true,
         processing: true,
         serverSide: true,
-        ajax: "{{ url('priorities/show/') }}" + {{$data->new_assignment_id}},
+        ajax: "{{ url('priorities/show') }}?new_assignment_id=" + {{$data->new_assignment_id}} + "&user_id=" + {{$data->user->id}},
         language:{
             paginate:{
                 previous:"&laquo;",

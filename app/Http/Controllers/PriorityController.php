@@ -102,22 +102,17 @@ class PriorityController extends Controller
     {
         
         if ($request->ajax()) {
-            // dd($id);
-            $str = str_replace('show','',$id);
-            
             DB::statement(DB::raw('set @rownum=0'));
             $data1 = ScheduleActivity::with(['application','application.project','user'])->select(
                 DB::raw('@rownum := @rownum +1 as rownum'),
                 'schedule_activities.*',
                 'new_assignments.assignment'
             )->join('new_assignments','new_assignments.id','schedule_activities.new_assignment_id');
-            if(Auth::user()->role_id != 3){
-                $data1 = $data1->where([
-                    ['schedule_activities.created_by',Auth::user()->id]
-                ]);
-            }
             $data1 = $data1->where([
-                ['schedule_activities.new_assignment_id', $str]
+                ['schedule_activities.created_by',$request->user_id]
+            ]);
+            $data1 = $data1->where([
+                ['schedule_activities.new_assignment_id', $request->new_assignment_id]
             ]);
             $data1 = $data1->get();
             return Datatables::of($data1)

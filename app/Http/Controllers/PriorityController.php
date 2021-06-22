@@ -59,7 +59,7 @@ class PriorityController extends Controller
             }
             $data = $data->where([
                 ["assignment","=","priority"],
-                ["new_assignments.status","=",2]
+                ["new_assignments.status","=",1]
             ]);
             $data = $data->orderBy('date','ASC')->get();
             // dd($data);

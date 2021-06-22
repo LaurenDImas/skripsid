@@ -58,9 +58,10 @@ class PriorityController extends Controller
                 ]);
             }
             $data = $data->where([
-                ["assignment","=","priority"]
+                ["assignment","=","priority"],
+                ["new_assignments.status","=",2]
             ]);
-            $data = $data->orderBy('date','DESC')->get();
+            $data = $data->orderBy('date','ASC')->get();
             // dd($data);
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {

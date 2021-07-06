@@ -53,13 +53,12 @@
                 columns: [
                     {
                         title: "No", 
-                        data:"rownum",
-                        name:"rownum",
+                        data: 'rownum', 
                         width:"1%",
+                        name: 'rownum',
                         searchable:false,
-                        orderable:true
+                        orderable:false,
                     },
-                   
                     @if(Auth::user()->role_id == 3)
                         {
                             title: "Programmer", 
@@ -73,9 +72,19 @@
                         data: 'id', 
                         width:"20%",
                         name: 'id',
+                        searchable:true,
+                        orderable:false,
                         render:function(id, e, t, n) {
                             return t.new_assignment.date;
                         },
+                    },
+                    {
+                        title: "Priority Number", 
+                        data: 'rownum', 
+                        width:"20%",
+                        name: 'rownum',
+                        searchable:false,
+                        orderable:false,
                     },
                     {
                         title: "Assignment", 

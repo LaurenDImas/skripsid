@@ -58,6 +58,9 @@
                         name: 'rownum',
                         searchable:false,
                         orderable:false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1;
+                        }
                     },
                     @if(Auth::user()->role_id == 3)
                         {
@@ -85,6 +88,9 @@
                         name: 'rownum',
                         searchable:false,
                         orderable:false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1;
+                        }
                     },
                     {
                         title: "Assignment", 

@@ -52,7 +52,7 @@ class PriorityController extends Controller
                 DB::raw('@rownum := @rownum +1 as rownum'),
                 'new_assignment_employees.*',
                 'new_assignments.*'
-            )->where('new_assignments.date','>=',date('Y-m-d'));
+            );
             if(Auth::user()->role_id != 3){
                 $data = $data->where([
                     ['user_id',"=",Auth::user()->id],
@@ -62,8 +62,8 @@ class PriorityController extends Controller
                 ["assignment","=","priority"],
                 ["new_assignments.status","=",1]
             ]);
-            $data = $data->orderBy('date','ASC')->get()->toArray();
-          
+            $data = $data->orderBy(DB::raw('ABS(DATEDIFF(new_assignments.date, NOW()))'))->get()->toArray();
+            // dd($data);
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {
                     $btn = '

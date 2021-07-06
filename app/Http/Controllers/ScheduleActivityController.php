@@ -49,8 +49,9 @@ class ScheduleActivityController extends Controller
             ->join('new_assignments','new_assignments.id','new_assignment_employees.new_assignment_id')
             ->select(
                 DB::raw('@rownum := @rownum +1 as rownum'),
-                'new_assignment_employees.*'
-            );
+                'new_assignment_employees.*',
+                'new_assignments.*'
+            )->where('new_assignments.date','>=',date('Y-m-d'));
             if(Auth::user()->role_id != 3){
                 $data = $data->where([
                     ['user_id',"=",Auth::user()->id],
@@ -59,7 +60,7 @@ class ScheduleActivityController extends Controller
             $data = $data->where([
                 ["assignment","=","new"]
             ]);
-            $data = $data->orderBy('date','DESC')->get();
+            $data = $data->orderBy('date','ASC')->get();
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {
                     $btn = '

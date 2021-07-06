@@ -130,7 +130,7 @@ class NewAssignmentController extends Controller
         $upload->assignment = $request->assignment;
         $upload->project_id = $request->project_id;
         $upload->application_id = $request->application_id;
-        $upload->status = 0;
+        $upload->status = 1;
         $upload->file = json_encode($data);
         $upload->save();
        

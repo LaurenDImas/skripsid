@@ -46,12 +46,13 @@ class PriorityController extends Controller
     {
         if ($request->ajax()) {
             DB::statement(DB::raw('set @rownum=0'));
-            $data = NewAssignmentEmployee::with(['user','newAssignment','newAssignment.application','newAssignment.application.project'])
+            $data = NewAssignmentEmployee::with(['user','newAssignment.application','newAssignment.application.project'])
             ->join('new_assignments','new_assignments.id','new_assignment_employees.new_assignment_id')
             ->select(
                 DB::raw('@rownum := @rownum +1 as rownum'),
-                'new_assignment_employees.*'
-            );
+                'new_assignment_employees.*',
+                'new_assignments.*'
+            )->where('new_assignments.date','>=',date('Y-m-d'));
             if(Auth::user()->role_id != 3){
                 $data = $data->where([
                     ['user_id',"=",Auth::user()->id],
@@ -61,8 +62,8 @@ class PriorityController extends Controller
                 ["assignment","=","priority"],
                 ["new_assignments.status","=",1]
             ]);
-            $data = $data->orderBy('date','ASC')->get();
-            // dd($data);
+            $data = $data->orderBy('date','ASC')->get()->toArray();
+          
             return Datatables::of($data)
                 ->addColumn('action', function ($row) {
                     $btn = '
@@ -72,7 +73,7 @@ class PriorityController extends Controller
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
                                 <ul class="nav nav-hoverable flex-column">
-                                    <li class="nav-item"><a class="nav-link" href="'.self::$folderPath.'/' . Crypt::encrypt($row->id) . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
+                                    <li class="nav-item"><a class="nav-link" href="'.self::$folderPath.'/' . Crypt::encrypt($row['id']) . '"><i class="nav-icon la la-search"></i><span class="nav-text">Detail</span></a></li>
                                 </ul>
                                 </div>
                             </div>
